@@ -1,9 +1,11 @@
 import React from 'react';
 
+import Header from '@/components/layout/Header/Header';
+
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
-      {/* 将来的に、ヘッダーやナビゲーションバーはここに追加します */}
+      <Header />
       <main>{children}</main>
     </div>
   );
