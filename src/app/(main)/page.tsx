@@ -1,26 +1,26 @@
-import { logout } from '@/lib/actions';
+import PostForm from '@/components/features/posts/PostForm/PostForm';
+import PostList from '@/components/features/posts/PostList/PostList';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+/**
+ * メインページ（ホーム・タイムライン）
+ * 投稿フォームと投稿一覧を表示
+ */
 const HomePage = async () => {
-  // サーバーサイドでユーザーのセッション情報を取得
   const supabase = await createSupabaseServerClient();
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+
+  // 投稿データをプロフィール情報と一緒に取得（新しい順）
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name)')
+    .order('created_at', { ascending: false });
 
   return (
-    <main>
-      <h1>語尾SNS タイムライン</h1>
-
-      {/* セッションが存在する場合（ログインしている場合）のみログアウトボタンを表示 */}
-      {session && (
-        <form action={logout}>
-          <button type="submit">ログアウト</button>
-        </form>
-      )}
-
-      <p>（ここに投稿が表示されます）</p>
-    </main>
+    <>
+      <h2>タイムライン</h2>
+      <PostForm />
+      <PostList posts={posts} />
+    </>
   );
 };
 
