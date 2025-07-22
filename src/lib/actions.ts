@@ -4,6 +4,10 @@ import { redirect } from 'next/navigation';
 
 import { createSupabaseServerClient } from './supabase/server';
 
+/**
+ * ユーザー新規登録
+ * メール認証後にログイン画面にリダイレクト
+ */
 export const signup = async (formData: FormData) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -18,7 +22,7 @@ export const signup = async (formData: FormData) => {
     email,
     password,
     options: {
-      emailRedirectTo: '/',
+      emailRedirectTo: '/login',
     },
   });
 
@@ -28,6 +32,10 @@ export const signup = async (formData: FormData) => {
   }
 };
 
+/**
+ * ユーザーログイン
+ * 成功時はホームページにリダイレクト
+ */
 export const login = async (formData: FormData) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
@@ -47,6 +55,10 @@ export const login = async (formData: FormData) => {
   redirect('/');
 };
 
+/**
+ * ユーザーログアウト
+ * ログイン画面にリダイレクト
+ */
 export const logout = async () => {
   const supabase = await createSupabaseServerClient();
 
@@ -55,6 +67,10 @@ export const logout = async () => {
   redirect('/login');
 };
 
+/**
+ * 新規投稿作成
+ * ユーザーのカスタム語尾が投稿内容に含まれているかチェック
+ */
 export const createPost = async (formData: FormData) => {
   const content = formData.get('content') as string;
   if (!content) {
@@ -85,6 +101,7 @@ export const createPost = async (formData: FormData) => {
 
   const gobi = profile.current_gobi;
 
+  // 語尾のバリデーション
   if (!gobi) {
     throw new Error('語尾が設定されていません');
   }
@@ -101,10 +118,15 @@ export const createPost = async (formData: FormData) => {
     throw new Error('投稿の保存に失敗しました。');
   }
 
+  // キャッシュを更新してホームページにリダイレクト
   revalidatePath('/');
   redirect('/');
 };
 
+/**
+ * プロフィール更新
+ * ユーザー名とカスタム語尾を更新
+ */
 export const updateProfile = async (formData: FormData) => {
   const username = formData.get('username') as string;
   const gobi = formData.get('gobi') as string;
@@ -127,5 +149,35 @@ export const updateProfile = async (formData: FormData) => {
     throw new Error('プロフィールの更新に失敗しました。');
   }
 
+  // プロフィールページのキャッシュを更新
   revalidatePath('/account/profile');
+};
+
+/**
+ * 投稿削除
+ * 認証済みユーザーのみ実行可能
+ */
+export const deletePost = async (postId: number) => {
+  if (!postId) {
+    throw new Error('ポストIDがありません。');
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error('認証されていません。');
+  }
+
+  const { error } = await supabase.from('posts').delete().match({ id: postId });
+
+  if (error) {
+    console.error(error);
+    throw new Error('投稿の削除に失敗しました。');
+  }
+
+  // ホームページのキャッシュを更新
+  revalidatePath('/');
 };
