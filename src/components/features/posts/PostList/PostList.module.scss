@@ -1,0 +1,10 @@
+@use 'styles/variables' as *;
+
+// 投稿一覧のリストコンテナ
+.list {
+  list-style: none; // デフォルトのリストスタイルを無効化
+  padding: 0; // デフォルトのパディングをリセット
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; // 各投稿カード間の余白
+}

@@ -1,7 +1,10 @@
 import Link from 'next/link';
 
+import Button from '@/components/ui/Button/Button';
 import { logout } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+
+import styles from './Header.module.scss';
 
 /**
  * アプリケーション全体のヘッダーコンポーネント
@@ -15,17 +18,21 @@ const Header = async () => {
   } = await supabase.auth.getSession();
 
   return (
-    <header>
-      <h1>
+    <header className={styles.header}>
+      <h1 className={styles.logo}>
         <Link href="/">Gobi SNS</Link>
       </h1>
 
       {/* ログイン済みユーザー向けナビゲーション */}
       {session && (
-        <nav>
-          <Link href="/account/profile">プロフィール設定</Link>
+        <nav className={styles.nav}>
+          <Link href="/account/profile" className={styles.navLink}>
+            プロフィール設定
+          </Link>
           <form action={logout}>
-            <button type="submit">ログアウト</button>
+            <Button type="submit" variant="secondary">
+              ログアウト
+            </Button>
           </form>
         </nav>
       )}

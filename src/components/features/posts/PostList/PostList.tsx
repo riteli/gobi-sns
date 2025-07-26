@@ -1,6 +1,8 @@
 import PostCard from '@/components/features/posts/PostCard/PostCard';
 import { type PostWithProfile } from '@/types';
 
+import styles from './PostList.module.scss';
+
 type PostListProps = {
   posts: PostWithProfile[] | null;
   userId: string | null;
@@ -17,7 +19,7 @@ const PostList = ({ posts, userId }: PostListProps) => {
   }
 
   return (
-    <ul>
+    <ul className={styles.list}>
       {posts.map((post) => (
         <PostCard key={post.id} post={post} userId={userId} />
       ))}

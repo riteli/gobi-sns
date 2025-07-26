@@ -1,0 +1,43 @@
+@use 'styles/variables' as *;
+
+// 投稿カードのメインコンテナ
+.card {
+  background-color: $color-white;
+  border: 1px solid $color-gray-medium;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+// ヘッダー部分（ユーザー名と投稿時刻）
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+// ユーザー名
+.userName {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+// 投稿時刻
+.time {
+  font-size: 0.8rem;
+  color: $color-gray-medium;
+  white-space: nowrap; // 時刻の改行を防ぐ
+}
+
+// 投稿内容
+.content {
+  margin-top: 0.75rem;
+  line-height: 1.7;
+}
+
+// アクション部分（削除ボタンなど）
+.actions {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end; // ボタンを右寄せ
+}

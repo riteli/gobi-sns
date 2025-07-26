@@ -1,8 +1,7 @@
 @use 'styles/variables' as *;
 
-// 新規登録ページのメインコンテナ
+// プロフィール設定ページのメインコンテナ
 .container {
-  width: 100%;
   max-width: 500px;
   margin: 2rem auto;
 }
@@ -14,7 +13,7 @@
   text-align: center;
 }
 
-// 新規登録フォーム
+// フォーム全体のスタイル
 .form {
   background-color: $color-white;
   padding: 2rem;
@@ -25,29 +24,19 @@
   gap: 1.5rem;
 }
 
-// フィールドセット（デフォルトスタイルをリセット）
-.fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-// 各入力項目のコンテナ
+// 各フォーム項目のグループ
 .formGroup {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-// 入力項目のラベル
+// ラベルスタイル
 .label {
   font-weight: bold;
 }
 
-// 入力フィールド
+// 入力フィールドのスタイル
 .input {
   width: 100%;
   padding: 0.75rem;
@@ -55,23 +44,10 @@
   border-radius: 4px;
   font-size: 1rem;
 
-  // フォーカス時のスタイル
+  // フォーカス時のアクセシビリティ配慮
   &:focus {
     outline: none;
     border-color: $color-primary;
     box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
   }
-}
-
-// スクリーンリーダー専用テキスト（視覚的に隠すが読み上げ可能）
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }

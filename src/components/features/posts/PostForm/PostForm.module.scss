@@ -1,0 +1,36 @@
+@use 'styles/variables' as *;
+
+// 投稿フォームのメインコンテナ
+.form {
+  background-color: $color-white;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid $color-gray-medium;
+}
+
+// 投稿内容入力用のテキストエリア
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 0.5rem;
+  border: 1px solid $color-gray-medium;
+  border-radius: 4px;
+  resize: vertical; // 縦方向のみリサイズ可能
+  font-size: 1rem;
+
+  // フォーカス時のスタイル
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+}
+
+// アクションボタンエリア（閉じる・投稿ボタン）
+.actions {
+  display: flex;
+  justify-content: flex-end; // ボタンを右寄せ
+  align-items: center;
+  gap: 0.75rem; // ボタン間の余白
+  margin-top: 0.75rem;
+}
