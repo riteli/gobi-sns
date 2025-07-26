@@ -1,0 +1,48 @@
+@use 'styles/variables' as *;
+
+// ヘッダーのメインコンテナ
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-white;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid $color-gray-medium; // ヘッダーとコンテンツの境界線
+}
+
+// サイトロゴ・タイトル
+.logo {
+  margin: 0; // h1のデフォルトマージンをリセット
+  font-size: 1.5rem;
+
+  a {
+    text-decoration: none;
+    color: $color-gray-dark;
+    font-weight: bold;
+  }
+}
+
+// ナビゲーションエリア
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; // ナビゲーション要素間の余白
+}
+
+// ナビゲーションリンク（ボタン風スタイル）
+.navLink {
+  display: inline-block;
+  background-color: $color-gray-light;
+  color: $color-gray-dark;
+  border: 1px solid $color-gray-medium;
+  border-radius: 9999px; // 完全な角丸（ピル型）
+  padding: 0.5rem 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s; // ホバー時のスムーズな色変化
+
+  &:hover {
+    background-color: darken($color-gray-light, 5%); // ホバー時に少し暗く
+    color: $color-gray-dark;
+  }
+}

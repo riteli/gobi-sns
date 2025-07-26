@@ -1,7 +1,10 @@
 import { redirect } from 'next/navigation';
 
+import Button from '@/components/ui/Button/Button';
 import { updateProfile } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+
+import styles from './page.module.scss';
 
 /**
  * プロフィール設定ページ
@@ -22,24 +25,37 @@ const ProfilePage = async () => {
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
 
   return (
-    <div>
-      <h2>プロフィール設定</h2>
-      <form action={updateProfile}>
-        <div>
-          <label htmlFor="username">ユーザー名</label>
+    <div className={styles.container}>
+      <h2 className={styles.title}>プロフィール設定</h2>
+      <form action={updateProfile} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="username" className={styles.label}>
+            ユーザー名
+          </label>
           <input
             type="text"
+            className={styles.input}
             name="username"
             id="username"
             defaultValue={profile?.user_name ?? ''}
             required
           />
         </div>
-        <div>
-          <label htmlFor="gobi">カスタム語尾</label>
-          <input type="text" name="gobi" id="gobi" defaultValue={profile?.current_gobi ?? ''} />
+        <div className={styles.formGroup}>
+          <label htmlFor="gobi" className={styles.label}>
+            カスタム語尾
+          </label>
+          <input
+            type="text"
+            className={styles.input}
+            name="gobi"
+            id="gobi"
+            defaultValue={profile?.current_gobi ?? ''}
+          />
         </div>
-        <button type="submit">更新する</button>
+        <Button type="submit" variant="primary">
+          更新する
+        </Button>
       </form>
     </div>
   );

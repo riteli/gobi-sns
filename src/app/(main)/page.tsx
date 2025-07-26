@@ -1,51 +1,37 @@
-'use client';
+import PostForm from '@/components/features/posts/PostForm/PostForm';
+import PostList from '@/components/features/posts/PostList/PostList';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-import { useEffect, useState } from 'react';
-
-import { deletePost } from '@/lib/actions';
-import { type PostWithProfile } from '@/types';
-
-type PostCardProps = {
-  post: PostWithProfile;
-  userId: string | null;
-};
+import styles from './page.module.scss';
 
 /**
- * 個別の投稿を表示するカードコンポーネント
- * ハイドレーションエラーを防ぐためクライアントサイドでのみ日時を表示
- * 投稿者本人のみ削除ボタンを表示
+ * メインページ（ホーム・タイムライン）
+ * 投稿フォームと投稿一覧を表示
  */
-const PostCard = ({ post, userId }: PostCardProps) => {
-  const [isClient, setIsClient] = useState(false);
+const HomePage = async () => {
+  const supabase = await createSupabaseServerClient();
 
-  // 現在のユーザーが投稿者かどうかを判定
-  const isOwnPost = userId && userId === post.user_id;
+  // ログインユーザーの情報を取得
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // クライアントサイドでのマウント後にフラグを立てる
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // 投稿データをプロフィール情報と一緒に取得（新しい順）
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name)')
+    .order('created_at', { ascending: false });
 
   return (
-    <li>
-      <p>
-        <strong>{post.profiles?.user_name ?? '名無しさん'}</strong>
-      </p>
-      <p>{post.content}</p>
-      {/* サーバーとクライアントの日時表示差異を防ぐため条件分岐 */}
-      {isClient && (
-        <p>
-          <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleString()}</time>
-        </p>
-      )}
-      {/* 投稿者本人のみ削除ボタンを表示 */}
-      {isOwnPost && (
-        <form action={deletePost.bind(null, post.id)}>
-          <button type="submit">削除</button>
-        </form>
-      )}
-    </li>
+    <>
+      <header className={styles.header}>
+        <h2 className={styles.title}>タイムライン</h2>
+        <PostForm />
+      </header>
+
+      <PostList posts={posts} userId={user?.id ?? null} />
+    </>
   );
 };
 
-export default PostCard;
+export default HomePage;
