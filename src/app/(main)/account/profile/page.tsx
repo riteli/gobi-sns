@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation';
-
 import Button from '@/components/ui/Button/Button';
 import { updateProfile } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -16,9 +14,9 @@ const ProfilePage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 未認証の場合はログインページにリダイレクト
+  // 未認証の場合は何も表示しない（middlewareでリダイレクト処理済み）
   if (!user) {
-    redirect('/login');
+    return null;
   }
 
   // 現在のプロフィール情報を取得
