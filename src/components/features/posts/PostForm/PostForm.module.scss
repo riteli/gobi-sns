@@ -1,5 +1,18 @@
 @use 'styles/variables' as *;
 
+// プロフィール未完了時の案内表示
+.notice {
+  background-color: lighten($color-error, 35%);
+  border: 1px solid $color-error;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
 // 投稿フォームのメインコンテナ
 .form {
   background-color: $color-white;
