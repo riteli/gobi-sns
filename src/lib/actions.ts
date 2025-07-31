@@ -71,9 +71,18 @@ export const signup = async (prevstate: FormState, formData: FormData): Promise<
  * ユーザーログイン
  * 成功時はホームページにリダイレクト
  */
-export const login = async (formData: FormData) => {
+export const login = async (prevState: FormState, formData: FormData): Promise<FormState> => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
+
+  // 必須項目のバリデーション
+  if (!email || !password) {
+    return {
+      message: 'メールアドレスとパスワードを入力してください。',
+      isError: true,
+      email: email,
+    };
+  }
 
   const supabase = await createSupabaseServerClient();
 
@@ -84,7 +93,11 @@ export const login = async (formData: FormData) => {
 
   if (error) {
     console.error(error);
-    throw new Error('メールアドレスまたはパスワードが間違っています。');
+    return {
+      message: 'メールアドレスまたはパスワードが間違っています。',
+      isError: true,
+      email: email,
+    };
   }
 
   redirect('/');
