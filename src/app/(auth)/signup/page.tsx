@@ -1,56 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useActionState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
 import { signup } from '@/lib/actions';
 
 import styles from './page.module.scss';
 
+// Server Actionと連携するための初期状態
+const initialState = {
+  message: '',
+  isError: false,
+  email: '',
+};
+
 /**
  * ユーザー新規登録ページ
  * メールアドレス・パスワードでアカウントを作成し、確認メールを送信
  */
 const SignUpPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // パスワード確認のバリデーション
-    if (password !== passwordConfirm) {
-      alert('パスワードが一致しません');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    try {
-      await signup(formData);
-
-      // 成功時はフォームをリセットしてユーザーに通知
-      setEmail('');
-      setPassword('');
-      setPasswordConfirm('');
-      alert('確認メールを送信しました。メールボックスを確認してください。');
-    } catch (error) {
-      // エラーハンドリング
-      if (error instanceof Error) {
-        alert('エラー：' + error.message);
-      } else {
-        alert('予期せぬエラーが発生しました。');
-      }
-    }
-  };
+  // useActionStateフックでフォームの状態(state)とアクション(formAction)を管理
+  const [state, formAction] = useActionState(signup, initialState);
 
   return (
     <main className={styles.container}>
       <h1 className={styles.title}>アカウント登録</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
+
+      <p
+        className={`${styles.message} ${state.message ? (state.isError ? styles.error : styles.success) : ''}`}
+        aria-live="polite"
+      >
+        {state.message || <>&nbsp;</>}
+      </p>
+
+      <form className={styles.form} action={formAction}>
         <fieldset className={styles.fieldset}>
           <legend className={styles.srOnly}>アカウント情報</legend>
 
@@ -64,12 +47,9 @@ const SignUpPage = () => {
               name="email"
               id="email"
               required
-              aria-describedby="email-error"
               autoComplete="username"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              key={state.message}
+              defaultValue={state.email}
             />
           </div>
 
@@ -83,12 +63,7 @@ const SignUpPage = () => {
               name="password"
               id="password"
               required
-              aria-describedby="password-error"
               autoComplete="new-password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
             />
           </div>
 
@@ -102,12 +77,7 @@ const SignUpPage = () => {
               name="password_confirm"
               id="password_confirm"
               required
-              aria-describedby="password-confirm-error"
               autoComplete="new-password"
-              value={passwordConfirm}
-              onChange={(e) => {
-                setPasswordConfirm(e.target.value);
-              }}
             />
           </div>
 

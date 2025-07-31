@@ -4,21 +4,38 @@ import { redirect } from 'next/navigation';
 
 import { createSupabaseServerClient } from './supabase/server';
 
+type FormState = {
+  message: string;
+  isError: boolean;
+  email?: string;
+};
+
 /**
  * ユーザー新規登録
  * メール認証後にログイン画面にリダイレクト
  */
-export const signup = async (formData: FormData) => {
+export const signup = async (prevstate: FormState, formData: FormData): Promise<FormState> => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
+  const passwordConfirm = formData.get('password_confirm') as string;
 
+  // パスワード確認のバリデーション
+  if (password !== passwordConfirm) {
+    return { message: 'パスワードが一致しません。', isError: true, email: email };
+  }
+
+  // 必須項目のバリデーション
   if (!email || !password) {
-    throw new Error('メールアドレスとパスワードを入力してください。');
+    return {
+      message: 'メールアドレスとパスワードを入力してください。',
+      isError: true,
+      email: email,
+    };
   }
 
   const supabase = await createSupabaseServerClient();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -28,8 +45,26 @@ export const signup = async (formData: FormData) => {
 
   if (error) {
     console.error(error);
-    throw new Error('アカウント登録に失敗しました。');
+    return {
+      message: 'アカウント登録に失敗しました。',
+      isError: true,
+      email: email,
+    };
   }
+
+  // 既存アカウントのチェック
+  if (data.user && data.user.identities?.length === 0) {
+    return {
+      message: 'このメールアドレスは既に使用されています。',
+      isError: true,
+      email: email,
+    };
+  }
+
+  return {
+    message: '確認メールを送信しました。メールボックスを確認してください。',
+    isError: false,
+  };
 };
 
 /**
