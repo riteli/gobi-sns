@@ -63,6 +63,25 @@
   }
 }
 
+// 相互リンクのコンテナ
+.linkContainer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $color-gray-dark;
+}
+
+// リンクテキストのスタイル
+.link {
+  color: $color-primary;
+  font-weight: bold;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 // Server Actionからのフィードバックメッセージ表示エリア
 .message {
   display: flex;

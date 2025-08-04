@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useActionState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
@@ -86,6 +87,15 @@ const SignUpPage = () => {
           </Button>
         </fieldset>
       </form>
+
+      <div className={styles.linkContainer}>
+        <p>
+          すでにアカウントをお持ちですか？{' '}
+          <Link href="/login" className={styles.link}>
+            ログイン
+          </Link>
+        </p>
+      </div>
     </main>
   );
 };
