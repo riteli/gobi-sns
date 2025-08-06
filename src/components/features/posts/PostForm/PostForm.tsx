@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
 import { createPost } from '@/lib/actions';
@@ -14,6 +14,13 @@ import styles from './PostForm.module.scss';
  * 展開・折りたたみ機能でUI領域を節約
  */
 const PostForm = () => {
+  const initialState = {
+    message: '',
+    isError: false,
+    content: '',
+  };
+  const [state, formAction] = useActionState(createPost, initialState);
+
   // フォームの展開状態を管理するstate
   const [isExpanded, setIsExpanded] = useState(false);
   // プロフィール設定完了状態を管理するstate
@@ -73,7 +80,7 @@ const PostForm = () => {
 
   // 展開時は投稿フォームを表示
   return (
-    <form action={createPost} className={styles.form}>
+    <form action={formAction} className={styles.form}>
       <div>
         <label htmlFor="content">投稿内容</label>
         <textarea
@@ -81,9 +88,18 @@ const PostForm = () => {
           name="content"
           id="content"
           placeholder="今日は何があった？"
+          key={state.message}
+          defaultValue={state.content}
           required
         />
       </div>
+
+      <div className={styles.messageWrapper}>
+        {state.message && (
+          <p className={state.isError ? styles.error : styles.success}>{state.message}</p>
+        )}
+      </div>
+
       <div className={styles.actions}>
         <Button
           type="button"
