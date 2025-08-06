@@ -1,6 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+
 import Button from '@/components/ui/Button/Button';
+import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
 import { deletePost } from '@/lib/actions';
 import { type PostWithProfile } from '@/types';
 
@@ -19,6 +22,15 @@ const PostCard = ({ post, userId }: PostCardProps) => {
   // 現在のユーザーが投稿者かどうかを判定
   const isOwnPost = userId && userId === post.user_id;
 
+  // モーダルの開閉状態の判定
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 投稿の削除処理
+  const handleDeleteConfirm = async () => {
+    await deletePost(post.id);
+    setIsModalOpen(false);
+  };
+
   return (
     <li>
       <article className={styles.card}>
@@ -32,14 +44,30 @@ const PostCard = ({ post, userId }: PostCardProps) => {
         {/* 投稿者本人のみ削除ボタンを表示 */}
         {isOwnPost && (
           <div className={styles.actions}>
-            <form action={deletePost.bind(null, post.id)}>
-              <Button type="submit" variant="secondary" size="small">
-                削除
-              </Button>
-            </form>
+            <Button
+              type="button"
+              variant="secondary"
+              size="small"
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            >
+              削除
+            </Button>
           </div>
         )}
       </article>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="投稿を削除"
+      >
+        <p>この操作は取り消せません。本当にこの投稿を削除しますか？</p>
+      </ConfirmModal>
     </li>
   );
 };

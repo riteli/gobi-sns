@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef, type FC, type ReactNode } from 'react';
 
 import styles from './Button.module.scss';
 
-type ButtonVariant = 'primary' | 'secondary';
+type ButtonVariant = 'primary' | 'secondary' | 'danger';
 type ButtonSize = 'medium' | 'small';
 
 type ButtonProps = {
