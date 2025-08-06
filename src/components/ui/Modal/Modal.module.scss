@@ -1,0 +1,33 @@
+@use 'styles/variables' as *;
+
+// ダイアログ本体
+.dialog {
+  background-color: $color-white;
+  margin: auto;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  border: none;
+
+  &[open] {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  // 背景のオーバーレイ
+  &::backdrop {
+    background-color: rgb(0 0 0 / 0.5);
+    animation: fadeIn 0.3s ease-out;
+  }
+}
+
+// フェードインのアニメーション
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
