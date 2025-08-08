@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
+import { useProfileStatus } from '@/hooks/useProfileStatus';
 import { createPost } from '@/lib/actions';
-import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 import styles from './PostForm.module.scss';
 
@@ -23,33 +23,13 @@ const PostForm = () => {
 
   // フォームの展開状態を管理するstate
   const [isExpanded, setIsExpanded] = useState(false);
-  // プロフィール設定完了状態を管理するstate
-  const [isProfileComplete, setIsProfileComplete] = useState(false);
 
   // マウント時にプロフィール設定状況をチェック
-  useEffect(() => {
-    const checkProfile = async () => {
-      const supabase = createSupabaseBrowserClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+  const { isProfileComplete, isLoading } = useProfileStatus();
 
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('user_name, current_gobi')
-          .eq('id', user.id)
-          .single();
-
-        // ユーザー名とカスタム語尾の両方が設定されているかチェック
-        if (profile?.user_name && profile.current_gobi) {
-          setIsProfileComplete(true);
-        }
-      }
-    };
-
-    void checkProfile();
-  }, []);
+  if (isLoading) {
+    return null;
+  }
 
   // 折りたたみ時は展開ボタンのみ表示
   if (!isExpanded) {
