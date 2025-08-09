@@ -2,12 +2,19 @@ import { useEffect, useState } from 'react';
 
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 
+type ProfileData = {
+  isProfileComplete: boolean;
+  gobi: string | null;
+  isLoading: boolean;
+};
+
 /**
- * 現在のユーザーのプロフィール設定状況をチェックするカスタムフック
- * @returns {{isProfileComplete: boolean, isLoading: boolean}} プロフィールの完了状態とローディング状態
+ * 現在のユーザーのプロフィール情報（完了状態、語尾）をチェックするカスタムフック
+ * @returns {{isProfileComplete: boolean, gobi: string | null, isLoading: boolean}} プロフィールの完了状態とローディング状態
  */
-export const useProfileStatus = () => {
+export const useProfileData = (): ProfileData => {
   const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [gobi, setGobi] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // コンポーネントのマウント時に一度だけ実行
@@ -25,6 +32,10 @@ export const useProfileStatus = () => {
           .eq('id', user.id)
           .single();
 
+        if (profile && typeof profile.current_gobi === 'string') {
+          setGobi(profile.current_gobi);
+        }
+
         // プロフィール完了の条件：ユーザー名と語尾の両方が設定されていること
         if (profile?.user_name && profile.current_gobi) {
           setIsProfileComplete(true);
@@ -36,5 +47,5 @@ export const useProfileStatus = () => {
     void checkProfile();
   }, []);
 
-  return { isProfileComplete, isLoading };
+  return { gobi, isProfileComplete, isLoading };
 };
