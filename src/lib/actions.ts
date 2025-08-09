@@ -10,12 +10,6 @@ type FormState = {
   email?: string;
 };
 
-type PostFormState = {
-  message: string;
-  isError: boolean;
-  content?: string;
-};
-
 /**
  * ユーザー新規登録
  * メール認証後にログイン画面にリダイレクト
@@ -125,13 +119,10 @@ export const logout = async () => {
  * 新規投稿作成
  * ユーザーのカスタム語尾が投稿内容に含まれているかチェック
  */
-export const createPost = async (
-  prevState: PostFormState,
-  formData: FormData,
-): Promise<PostFormState> => {
+export const createPost = async (formData: FormData) => {
   const content = formData.get('content') as string;
   if (!content) {
-    return { message: '投稿内容を入力してください。', isError: true, content: content };
+    throw new Error('投稿内容がありません。');
   }
 
   const supabase = await createSupabaseServerClient();
@@ -142,7 +133,7 @@ export const createPost = async (
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { message: 'ユーザーが認証されていません。', isError: true, content: content };
+    throw new Error('ユーザーが認証されていません。');
   }
 
   // ユーザーのプロフィールから現在の語尾を取得
@@ -153,17 +144,17 @@ export const createPost = async (
     .single();
 
   if (profileError) {
-    return { message: 'プロフィールの取得に失敗しました。', isError: true, content: content };
+    throw new Error('プロフィールの取得に失敗しました。');
   }
 
   const gobi = profile.current_gobi;
 
   // 語尾のバリデーション
   if (!gobi) {
-    return { message: '語尾が設定されていません', isError: true, content: content };
+    throw new Error('語尾が設定されていません');
   }
   if (!content.includes(gobi)) {
-    return { message: `投稿に語尾「${gobi}」を含めてください。`, isError: true, content: content };
+    throw new Error(`投稿に語尾「${gobi}」が含まれていません。`);
   }
 
   const { error: insertError } = await supabase
@@ -172,7 +163,7 @@ export const createPost = async (
 
   if (insertError) {
     console.error(insertError);
-    return { message: '投稿の保存に失敗しました。', isError: true, content: content };
+    throw new Error('投稿の保存に失敗しました。');
   }
 
   // キャッシュを更新してホームページにリダイレクト
