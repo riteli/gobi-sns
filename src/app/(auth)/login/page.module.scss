@@ -82,36 +82,10 @@
   }
 }
 
-// Server Actionからのフィードバックメッセージ表示エリア
-.message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 60px;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  border-radius: 8px;
-  text-align: center;
-  transition: all 0.2s;
-
-  // デフォルトでは非表示（領域だけ確保）
-  background-color: transparent;
-  border: 1px solid transparent;
-  color: transparent;
-}
-
-// 成功メッセージのスタイリング
-.success {
-  background-color: lighten($color-primary, 35%);
-  border-color: lighten($color-primary, 20%);
-  color: darken($color-primary, 20%);
-}
-
-// エラーメッセージのスタイリング
-.error {
-  background-color: lighten($color-error, 38%);
-  border-color: $color-error;
+// エラーメッセージのスタイル
+.errorMessage {
   color: $color-error;
+  margin-top: 0.25rem;
 }
 
 // スクリーンリーダー専用テキスト（視覚的に隠すが読み上げ可能）

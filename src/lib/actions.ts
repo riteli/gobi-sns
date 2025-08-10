@@ -1,7 +1,9 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
+import { loginSchema } from './schema';
 import { createSupabaseServerClient } from './supabase/server';
 
 type FormState = {
@@ -9,6 +11,8 @@ type FormState = {
   isError: boolean;
   email?: string;
 };
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 /**
  * ユーザー新規登録
@@ -71,33 +75,23 @@ export const signup = async (prevstate: FormState, formData: FormData): Promise<
  * ユーザーログイン
  * 成功時はホームページにリダイレクト
  */
-export const login = async (prevState: FormState, formData: FormData): Promise<FormState> => {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+export const login = async (data: LoginFormData) => {
+  const result = loginSchema.safeParse(data);
 
-  // 必須項目のバリデーション
-  if (!email || !password) {
-    return {
-      message: 'メールアドレスとパスワードを入力してください。',
-      isError: true,
-      email: email,
-    };
+  if (!result.success) {
+    throw new Error('入力データが無効です。');
   }
 
   const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
+    email: data.email,
+    password: data.password,
   });
 
   if (error) {
     console.error(error);
-    return {
-      message: 'メールアドレスまたはパスワードが間違っています。',
-      isError: true,
-      email: email,
-    };
+    throw new Error('メールアドレスまたはパスワードが間違っています。');
   }
 
   redirect('/');

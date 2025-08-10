@@ -1,38 +1,29 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
-import { login } from '@/lib/actions';
+import { useLoginForm } from '@/hooks/useLoginForm';
 
 import styles from './page.module.scss';
-
-const initialState = {
-  message: '',
-  isError: false,
-  email: '',
-};
 
 /**
  * ユーザーログインページ
  * メールアドレスとパスワードでの認証を行う
  */
 const LoginPage = () => {
-  const [state, formAction] = useActionState(login, initialState);
+  const { form, onSubmit } = useLoginForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
   return (
     <main className={styles.container}>
       <h1 className={styles.title}>ログイン</h1>
 
-      <p
-        className={`${styles.message} ${state.message ? (state.isError ? styles.error : styles.success) : ''}`}
-        aria-live="polite"
-      >
-        {state.message || <>&nbsp;</>}
-      </p>
-
-      <form className={styles.form} action={formAction}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <fieldset className={styles.fieldset}>
           <legend className={styles.srOnly}>ログイン情報</legend>
           <div className={styles.formGroup}>
@@ -42,13 +33,11 @@ const LoginPage = () => {
             <input
               type="email"
               className={styles.input}
-              name="email"
               id="email"
-              required
               autoComplete="username"
-              key={state.message}
-              defaultValue={state.email}
+              {...register('email')}
             />
+            {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
           </div>
 
           <div className={styles.formGroup}>
@@ -58,15 +47,15 @@ const LoginPage = () => {
             <input
               type="password"
               className={styles.input}
-              name="password"
               id="password"
-              required
               autoComplete="current-password"
+              {...register('password')}
             />
+            {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" variant="primary">
-            ログイン
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'ログイン中...' : 'ログイン'}
           </Button>
         </fieldset>
       </form>
