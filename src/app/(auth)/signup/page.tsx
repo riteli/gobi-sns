@@ -1,40 +1,29 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
-import { signup } from '@/lib/actions';
+import { useSignUpForm } from '@/hooks/useSignUpForm';
 
 import styles from './page.module.scss';
-
-// Server Actionと連携するための初期状態
-const initialState = {
-  message: '',
-  isError: false,
-  email: '',
-};
 
 /**
  * ユーザー新規登録ページ
  * メールアドレス・パスワードでアカウントを作成し、確認メールを送信
  */
 const SignUpPage = () => {
-  // useActionStateフックでフォームの状態(state)とアクション(formAction)を管理
-  const [state, formAction] = useActionState(signup, initialState);
+  const { form, onSubmit } = useSignUpForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
   return (
     <main className={styles.container}>
       <h1 className={styles.title}>アカウント登録</h1>
 
-      <p
-        className={`${styles.message} ${state.message ? (state.isError ? styles.error : styles.success) : ''}`}
-        aria-live="polite"
-      >
-        {state.message || <>&nbsp;</>}
-      </p>
-
-      <form className={styles.form} action={formAction}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <fieldset className={styles.fieldset}>
           <legend className={styles.srOnly}>アカウント情報</legend>
 
@@ -45,13 +34,11 @@ const SignUpPage = () => {
             <input
               type="email"
               className={styles.input}
-              name="email"
               id="email"
-              required
               autoComplete="username"
-              key={state.message}
-              defaultValue={state.email}
+              {...register('email')}
             />
+            {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
           </div>
 
           <div className={styles.formGroup}>
@@ -61,11 +48,11 @@ const SignUpPage = () => {
             <input
               type="password"
               className={styles.input}
-              name="password"
               id="password"
-              required
               autoComplete="new-password"
+              {...register('password')}
             />
+            {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
           </div>
 
           <div className={styles.formGroup}>
@@ -75,15 +62,17 @@ const SignUpPage = () => {
             <input
               type="password"
               className={styles.input}
-              name="password_confirm"
               id="password_confirm"
-              required
               autoComplete="new-password"
+              {...register('password_confirm')}
             />
+            {errors.password_confirm && (
+              <p className={styles.errorMessage}>{errors.password_confirm.message}</p>
+            )}
           </div>
 
-          <Button type="submit" variant="primary">
-            登録する
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? '登録中...' : '登録する'}
           </Button>
         </fieldset>
       </form>
