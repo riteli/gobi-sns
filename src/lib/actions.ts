@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { signupSchema, loginSchema } from './schema';
+import { createPostSchema, profileSchema, signupSchema, loginSchema } from './schema';
 import { createSupabaseServerClient } from './supabase/server';
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -83,10 +83,7 @@ export const logout = async () => {
  * ユーザーのカスタム語尾が投稿内容に含まれているかチェック
  */
 export const createPost = async (formData: FormData) => {
-  const content = formData.get('content') as string;
-  if (!content) {
-    throw new Error('投稿内容がありません。');
-  }
+  const data = { content: formData.get('content') as string };
 
   const supabase = await createSupabaseServerClient();
 
@@ -116,13 +113,15 @@ export const createPost = async (formData: FormData) => {
   if (!gobi) {
     throw new Error('語尾が設定されていません');
   }
-  if (!content.includes(gobi)) {
-    throw new Error(`投稿に語尾「${gobi}」が含まれていません。`);
+
+  const result = createPostSchema(gobi).safeParse(data);
+  if (!result.success) {
+    throw new Error('入力データが無効です。');
   }
 
   const { error: insertError } = await supabase
     .from('posts')
-    .insert({ content: content, gobi: gobi, user_id: user.id });
+    .insert({ content: data.content, gobi: gobi, user_id: user.id });
 
   if (insertError) {
     console.error(insertError);
@@ -139,8 +138,15 @@ export const createPost = async (formData: FormData) => {
  * ユーザー名とカスタム語尾を更新
  */
 export const updateProfile = async (formData: FormData) => {
-  const username = formData.get('username') as string;
-  const gobi = formData.get('gobi') as string;
+  const data = {
+    user_name: formData.get('username') as string,
+    gobi: formData.get('gobi') as string,
+  };
+
+  const result = profileSchema.safeParse(data);
+  if (!result.success) {
+    throw new Error('入力データが無効です。');
+  }
 
   const supabase = await createSupabaseServerClient();
   const {
@@ -153,7 +159,11 @@ export const updateProfile = async (formData: FormData) => {
 
   const { error } = await supabase
     .from('profiles')
-    .update({ user_name: username, current_gobi: gobi, updated_at: new Date().toISOString() })
+    .update({
+      user_name: data.user_name,
+      current_gobi: data.gobi,
+      updated_at: new Date().toISOString(),
+    })
     .eq('id', user.id);
 
   if (error) {
