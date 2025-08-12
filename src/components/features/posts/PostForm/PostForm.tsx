@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
@@ -47,9 +46,9 @@ const PostForm = () => {
     return (
       <div className={styles.notice}>
         <p>投稿するには、プロフィール設定でユーザー名とカスタム語尾を設定する必要があります。</p>
-        <Link href="/account/profile">
-          <Button variant="primary">設定ページへ</Button>
-        </Link>
+        <Button href="/account/profile" variant="primary">
+          設定ページへ
+        </Button>
       </div>
     );
   }
