@@ -10,9 +10,22 @@ export const createPostSchema = (gobi: string) => {
     content: z
       .string()
       .min(1, '投稿内容を入力してください。')
+      .max(200, '投稿は200文字以内で入力してください。')
       .refine((value) => value.includes(gobi), `投稿に語尾「${gobi}」を含めてください。`),
   });
 };
+
+/**
+ * プロフィール更新フォーム用のバリデーションスキーマ
+ */
+
+export const profileSchema = z.object({
+  user_name: z
+    .string()
+    .min(1, 'ユーザー名は必須です。')
+    .max(20, 'ユーザー名は20文字以内で入力してください。'),
+  gobi: z.string().min(1, '語尾は必須です。').max(10, '語尾は10文字以内で入力してください。'),
+});
 
 /**
  * ログインフォーム用のバリデーションスキーマ
