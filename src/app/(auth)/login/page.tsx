@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button/Button';
 import { useLoginForm } from '@/hooks/useLoginForm';
 
-import styles from './page.module.scss';
+import styles from '../authForm.module.scss';
 
 /**
  * ユーザーログインページ
