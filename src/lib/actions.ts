@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from './supabase/server';
 
 type LoginFormData = z.infer<typeof loginSchema>;
 type SignupFormData = z.infer<typeof signupSchema>;
+type ProfileFormData = z.infer<typeof profileSchema>;
 
 /**
  * ユーザー新規登録
@@ -137,12 +138,7 @@ export const createPost = async (formData: FormData) => {
  * プロフィール更新
  * ユーザー名とカスタム語尾を更新
  */
-export const updateProfile = async (formData: FormData) => {
-  const data = {
-    user_name: formData.get('username') as string,
-    gobi: formData.get('gobi') as string,
-  };
-
+export const updateProfile = async (data: ProfileFormData) => {
   const result = profileSchema.safeParse(data);
   if (!result.success) {
     throw new Error('入力データが無効です。');
