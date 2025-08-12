@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button/Button';
 import { useSignUpForm } from '@/hooks/useSignUpForm';
 
-import styles from './page.module.scss';
+import styles from '../authForm.module.scss';
 
 /**
  * ユーザー新規登録ページ
