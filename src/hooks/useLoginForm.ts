@@ -26,7 +26,9 @@ export const useLoginForm = () => {
       await login(data);
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message);
+        if (!error.message.includes('NEXT_REDIRECT')) {
+          toast.error(error.message);
+        }
       } else {
         toast.error('ログインに失敗しました。');
       }
