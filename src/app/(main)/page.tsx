@@ -19,8 +19,25 @@ const HomePage = async () => {
   // 投稿データをプロフィール情報と一緒に取得（新しい順）
   const { data: posts } = await supabase
     .from('posts')
-    .select('*, profiles(user_name)')
+    .select('*, profiles(user_name), likes(count)')
     .order('created_at', { ascending: false });
+
+  // ログインユーザーがいいねした投稿IDを格納するSet
+  let likedPostIds = new Set<number>();
+
+  // ログインしている場合のみ、いいねリストを取得
+  if (user) {
+    const { data: likedPosts } = await supabase
+      .from('likes')
+      .select('post_id')
+      .eq('user_id', user.id);
+
+    if (likedPosts) {
+      likedPostIds = new Set(
+        likedPosts.filter((like) => like.post_id !== null).map((like) => like.post_id as number),
+      );
+    }
+  }
 
   return (
     <>
@@ -29,7 +46,7 @@ const HomePage = async () => {
         <PostForm />
       </header>
 
-      <PostList posts={posts} userId={user?.id ?? null} />
+      <PostList posts={posts} userId={user?.id ?? null} likedPostIds={likedPostIds} />
     </>
   );
 };

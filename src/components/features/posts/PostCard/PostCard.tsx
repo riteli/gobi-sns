@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import Button from '@/components/ui/Button/Button';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
-import { deletePost } from '@/lib/actions';
+import { deletePost, likePost, unlikePost } from '@/lib/actions';
 import { type PostWithProfile } from '@/types';
 
 import styles from './PostCard.module.scss';
@@ -12,18 +14,42 @@ import styles from './PostCard.module.scss';
 type PostCardProps = {
   post: PostWithProfile;
   userId: string | null;
+  likedPostIds: Set<number>;
 };
 
 /**
  * 個別の投稿を表示するカードコンポーネント
  * 投稿者本人のみ削除ボタンを表示
  */
-const PostCard = ({ post, userId }: PostCardProps) => {
+const PostCard = ({ post, userId, likedPostIds }: PostCardProps) => {
   // 現在のユーザーが投稿者かどうかを判定
   const isOwnPost = userId && userId === post.user_id;
 
   // モーダルの開閉状態の判定
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // いいねの数
+  const likeCount = post.likes[0]?.count ?? 0;
+
+  // いいねをした投稿か判定
+  const isLiked = likedPostIds.has(post.id);
+
+  const handleLike = async () => {
+    try {
+      if (isLiked) {
+        await unlikePost(post.id);
+      } else {
+        await likePost(post.id);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.error(error);
+        toast.error('エラーが発生しました。時間をおいて再度お試しください。');
+      }
+    }
+  };
 
   // 投稿の削除処理
   const handleDeleteConfirm = async () => {
@@ -42,8 +68,15 @@ const PostCard = ({ post, userId }: PostCardProps) => {
         </div>
         <p className={styles.content}>{post.content}</p>
         {/* 投稿者本人のみ削除ボタンを表示 */}
-        {isOwnPost && (
-          <div className={styles.actions}>
+
+        <div className={styles.actions}>
+          <div className={styles.likeSection}>
+            <button className={styles.likeButton} type="button" onClick={handleLike}>
+              {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+            </button>
+            <span>{likeCount}</span>
+          </div>
+          {isOwnPost && (
             <Button
               type="button"
               variant="secondary"
@@ -54,8 +87,8 @@ const PostCard = ({ post, userId }: PostCardProps) => {
             >
               削除
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </article>
 
       <ConfirmModal

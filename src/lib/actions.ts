@@ -198,3 +198,56 @@ export const deletePost = async (postId: number) => {
   // ホームページのキャッシュを更新
   revalidatePath('/');
 };
+
+/**
+ * 投稿いいね
+ * いいねの情報をデータベースに追加する
+ */
+export const likePost = async (postId: number) => {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('認証されていません。');
+  }
+
+  const { error: insertError } = await supabase
+    .from('likes')
+    .insert({ user_id: user.id, post_id: postId });
+
+  if (insertError) {
+    console.error(insertError);
+    throw new Error('いいねに失敗しました。');
+  }
+
+  revalidatePath('/');
+};
+
+/**
+ * 投稿いいね取り消し
+ * いいねの情報をデータベースから削除する
+ */
+export const unlikePost = async (postId: number) => {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('認証されていません。');
+  }
+
+  const { error: deleteError } = await supabase
+    .from('likes')
+    .delete()
+    .match({ user_id: user.id, post_id: postId });
+
+  if (deleteError) {
+    console.error(deleteError);
+    throw new Error('いいねの取り消しに失敗しました。');
+  }
+
+  revalidatePath('/');
+};
