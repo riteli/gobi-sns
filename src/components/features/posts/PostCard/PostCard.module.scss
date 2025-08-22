@@ -35,9 +35,33 @@
   line-height: 1.7;
 }
 
-// アクション部分（削除ボタンなど）
+// アクション部分のコンテナ
 .actions {
   margin-top: 0.75rem;
   display: flex;
-  justify-content: flex-end; // ボタンを右寄せ
+  justify-content: space-between;
+  align-items: center;
+}
+
+// いいねセクション（アイコンと数）
+.likeSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $color-gray-dark;
+}
+
+// いいねボタンのスタイル
+.likeButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: $color-gray-dark;
+  transition: color 0.2s;
+
+  &:hover {
+    color: darken($color-gray-dark, 20%);
+  }
 }
