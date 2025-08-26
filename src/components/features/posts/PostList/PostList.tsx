@@ -5,16 +5,13 @@ import styles from './PostList.module.scss';
 
 type PostListProps = {
   posts: PostWithProfile[] | null;
-  userId: string | null;
-  likedPostIds: Set<number>;
-  followingUserIds: Set<string>;
 };
 
 /**
  * 投稿一覧を表示するコンポーネント
  * 投稿がない場合は適切なメッセージを表示
  */
-const PostList = ({ posts, userId, likedPostIds, followingUserIds }: PostListProps) => {
+const PostList = ({ posts }: PostListProps) => {
   // 投稿データがない場合の表示
   if (!posts || posts.length === 0) {
     return <p>まだ投稿がありません</p>;
@@ -23,13 +20,7 @@ const PostList = ({ posts, userId, likedPostIds, followingUserIds }: PostListPro
   return (
     <ul className={styles.list}>
       {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          userId={userId}
-          likedPostIds={likedPostIds}
-          followingUserIds={followingUserIds}
-        />
+        <PostCard key={post.id} post={post} />
       ))}
     </ul>
   );
