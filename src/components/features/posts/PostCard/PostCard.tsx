@@ -6,6 +6,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import Button from '@/components/ui/Button/Button';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
+import { useTimeline } from '@/contexts/TimelineContext';
 import { deletePost, followUser, likePost, unfollowUser, unlikePost } from '@/lib/actions';
 import { type PostWithProfile } from '@/types';
 
@@ -13,16 +14,16 @@ import styles from './PostCard.module.scss';
 
 type PostCardProps = {
   post: PostWithProfile;
-  userId: string | null;
-  likedPostIds: Set<number>;
-  followingUserIds: Set<string>;
 };
 
 /**
  * 個別の投稿を表示するカードコンポーネント
  * 投稿者本人のみ削除ボタンを表示
  */
-const PostCard = ({ post, userId, likedPostIds, followingUserIds }: PostCardProps) => {
+const PostCard = ({ post }: PostCardProps) => {
+  // Contextからデータを取得
+  const { userId, likedPostIds, followingUserIds } = useTimeline();
+
   // 現在のユーザーが投稿者かどうかを判定
   const isOwnPost = userId && userId === post.user_id;
 
