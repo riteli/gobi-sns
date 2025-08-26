@@ -34,7 +34,30 @@ const HomePage = async () => {
 
     if (likedPosts) {
       likedPostIds = new Set(
-        likedPosts.filter((like) => like.post_id !== null).map((like) => like.post_id as number),
+        likedPosts
+          .filter((like): like is { post_id: number } => like.post_id !== null)
+          .map((like) => like.post_id),
+      );
+    }
+  }
+
+  // ログインユーザーがフォローしたユーザーIDを格納するSet
+  let followingUserIds = new Set<string>();
+
+  // ログインしている場合のみ、フォローリストを取得
+  if (user) {
+    const { data: followingUsers } = await supabase
+      .from('follows')
+      .select('following_id')
+      .eq('follower_id', user.id);
+
+    if (followingUsers) {
+      followingUserIds = new Set(
+        followingUsers
+          .filter(
+            (following): following is { following_id: string } => following.following_id !== null,
+          )
+          .map((following) => following.following_id),
       );
     }
   }
@@ -46,9 +69,13 @@ const HomePage = async () => {
         <PostForm />
       </header>
 
-      <PostList posts={posts} userId={user?.id ?? null} likedPostIds={likedPostIds} />
+      <PostList
+        posts={posts}
+        userId={user?.id ?? null}
+        likedPostIds={likedPostIds}
+        followingUserIds={followingUserIds}
+      />
     </>
   );
 };
-
 export default HomePage;

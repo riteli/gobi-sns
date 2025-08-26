@@ -22,13 +22,6 @@
   font-size: 1rem;
 }
 
-// 投稿時刻
-.time {
-  font-size: 0.8rem;
-  color: $color-gray-medium;
-  white-space: nowrap; // 時刻の改行を防ぐ
-}
-
 // 投稿内容
 .content {
   margin-top: 0.75rem;
@@ -64,4 +57,14 @@
   &:hover {
     color: darken($color-gray-dark, 20%);
   }
+}
+
+// 投稿時刻
+.time {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: $color-gray-medium;
+  white-space: nowrap; // 時刻の改行を防ぐ
 }
