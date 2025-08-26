@@ -36,29 +36,6 @@
   align-items: center;
 }
 
-// いいねセクション（アイコンと数）
-.likeSection {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: $color-gray-dark;
-}
-
-// いいねボタンのスタイル
-.likeButton {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 1.25rem;
-  color: $color-gray-dark;
-  transition: color 0.2s;
-
-  &:hover {
-    color: darken($color-gray-dark, 20%);
-  }
-}
-
 // 投稿時刻
 .time {
   display: flex;
