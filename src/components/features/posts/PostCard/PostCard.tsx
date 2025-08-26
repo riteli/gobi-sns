@@ -6,7 +6,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import Button from '@/components/ui/Button/Button';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
-import { deletePost, likePost, unlikePost } from '@/lib/actions';
+import { deletePost, followUser, likePost, unfollowUser, unlikePost } from '@/lib/actions';
 import { type PostWithProfile } from '@/types';
 
 import styles from './PostCard.module.scss';
@@ -15,13 +15,14 @@ type PostCardProps = {
   post: PostWithProfile;
   userId: string | null;
   likedPostIds: Set<number>;
+  followingUserIds: Set<string>;
 };
 
 /**
  * 個別の投稿を表示するカードコンポーネント
  * 投稿者本人のみ削除ボタンを表示
  */
-const PostCard = ({ post, userId, likedPostIds }: PostCardProps) => {
+const PostCard = ({ post, userId, likedPostIds, followingUserIds }: PostCardProps) => {
   // 現在のユーザーが投稿者かどうかを判定
   const isOwnPost = userId && userId === post.user_id;
 
@@ -51,6 +52,27 @@ const PostCard = ({ post, userId, likedPostIds }: PostCardProps) => {
     }
   };
 
+  // 現在の投稿の投稿者が、ログインユーザーのフォローリストに含まれているかを判定
+  const isFollowing = post.user_id ? followingUserIds.has(post.user_id) : false;
+
+  const handleFollow = async () => {
+    if (!post.user_id) return;
+    try {
+      if (isFollowing) {
+        await unfollowUser(post.user_id);
+      } else {
+        await followUser(post.user_id);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.error(error);
+        toast.error('エラーが発生しました。時間をおいて再度お試しください。');
+      }
+    }
+  };
+
   // 投稿の削除処理
   const handleDeleteConfirm = async () => {
     await deletePost(post.id);
@@ -60,35 +82,51 @@ const PostCard = ({ post, userId, likedPostIds }: PostCardProps) => {
   return (
     <li>
       <article className={styles.card}>
-        <div className={styles.header}>
+        <header className={styles.header}>
           <span className={styles.userName}>{post.profiles?.user_name ?? '名無しさん'}</span>
+          {/* 投稿者本人以外のみフォローボタンを表示 */}
+          {!isOwnPost && (
+            <Button
+              type="button"
+              variant={isFollowing ? 'primary' : 'secondary'}
+              size="small"
+              onClick={handleFollow}
+            >
+              {isFollowing ? 'フォロー中' : 'フォローする'}
+            </Button>
+          )}
+        </header>
+
+        <main>
+          <p className={styles.content}>{post.content}</p>
+        </main>
+
+        <footer>
+          <div className={styles.actions}>
+            <div className={styles.likeSection}>
+              <button className={styles.likeButton} type="button" onClick={handleLike}>
+                {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
+              </button>
+              <span>{likeCount}</span>
+            </div>
+            {/* 投稿者本人のみ削除ボタンを表示 */}
+            {isOwnPost && (
+              <Button
+                type="button"
+                variant="secondary"
+                size="small"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                削除
+              </Button>
+            )}
+          </div>
           <time dateTime={post.created_at} className={styles.time}>
             {new Date(post.created_at).toLocaleString()}
           </time>
-        </div>
-        <p className={styles.content}>{post.content}</p>
-        {/* 投稿者本人のみ削除ボタンを表示 */}
-
-        <div className={styles.actions}>
-          <div className={styles.likeSection}>
-            <button className={styles.likeButton} type="button" onClick={handleLike}>
-              {isLiked ? <FaHeart color="red" /> : <FaRegHeart />}
-            </button>
-            <span>{likeCount}</span>
-          </div>
-          {isOwnPost && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="small"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            >
-              削除
-            </Button>
-          )}
-        </div>
+        </footer>
       </article>
 
       <ConfirmModal

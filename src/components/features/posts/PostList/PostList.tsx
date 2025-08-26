@@ -7,13 +7,14 @@ type PostListProps = {
   posts: PostWithProfile[] | null;
   userId: string | null;
   likedPostIds: Set<number>;
+  followingUserIds: Set<string>;
 };
 
 /**
  * 投稿一覧を表示するコンポーネント
  * 投稿がない場合は適切なメッセージを表示
  */
-const PostList = ({ posts, userId, likedPostIds }: PostListProps) => {
+const PostList = ({ posts, userId, likedPostIds, followingUserIds }: PostListProps) => {
   // 投稿データがない場合の表示
   if (!posts || posts.length === 0) {
     return <p>まだ投稿がありません</p>;
@@ -22,7 +23,13 @@ const PostList = ({ posts, userId, likedPostIds }: PostListProps) => {
   return (
     <ul className={styles.list}>
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} userId={userId} likedPostIds={likedPostIds} />
+        <PostCard
+          key={post.id}
+          post={post}
+          userId={userId}
+          likedPostIds={likedPostIds}
+          followingUserIds={followingUserIds}
+        />
       ))}
     </ul>
   );
