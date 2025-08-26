@@ -11,6 +11,23 @@ type SignupFormData = z.infer<typeof signupSchema>;
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 /**
+ * 認証済みユーザーのSupabaseクライアントとユーザー情報を取得するヘルパー関数
+ * @returns {Promise<{supabase: SupabaseClient, user: User}>}
+ * @throws ユーザーが認証されていない場合にエラーをスローする
+ */
+const getAuthenticatedClient = async () => {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error('認証されていません。');
+  }
+
+  return { supabase, user };
+};
+
+/**
  * ユーザー新規登録
  * メール認証後にログイン画面にリダイレクト
  */
@@ -86,16 +103,7 @@ export const logout = async () => {
 export const createPost = async (formData: FormData) => {
   const data = { content: formData.get('content') as string };
 
-  const supabase = await createSupabaseServerClient();
-
-  // 現在のユーザーを取得
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('ユーザーが認証されていません。');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   // ユーザーのプロフィールから現在の語尾を取得
   const { data: profile, error: profileError } = await supabase
@@ -144,14 +152,7 @@ export const updateProfile = async (data: ProfileFormData) => {
     throw new Error('入力データが無効です。');
   }
 
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('ユーザーが認証されていません');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   const { error } = await supabase
     .from('profiles')
@@ -179,16 +180,9 @@ export const deletePost = async (postId: number) => {
     throw new Error('ポストIDがありません。');
   }
 
-  const supabase = await createSupabaseServerClient();
+  const { supabase, user } = await getAuthenticatedClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) {
-    throw new Error('認証されていません。');
-  }
-
-  const { error } = await supabase.from('posts').delete().match({ id: postId });
+  const { error } = await supabase.from('posts').delete().match({ id: postId, user_id: user.id });
 
   if (error) {
     console.error(error);
@@ -204,14 +198,7 @@ export const deletePost = async (postId: number) => {
  * いいねの情報をデータベースに追加する
  */
 export const likePost = async (postId: number) => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('認証されていません。');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   const { error: insertError } = await supabase
     .from('likes')
@@ -230,14 +217,7 @@ export const likePost = async (postId: number) => {
  * いいねの情報をデータベースから削除する
  */
 export const unlikePost = async (postId: number) => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('認証されていません。');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   const { error: deleteError } = await supabase
     .from('likes')
@@ -257,14 +237,7 @@ export const unlikePost = async (postId: number) => {
  * フォローの情報をデータベースに追加する
  */
 export const followUser = async (userIdToFollow: string) => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('認証されていません。');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   if (user.id === userIdToFollow) {
     throw new Error('自分自身をフォローすることはできません。');
@@ -287,14 +260,7 @@ export const followUser = async (userIdToFollow: string) => {
  * フォローの情報をデータベースから削除する
  */
 export const unfollowUser = async (userIdToUnfollow: string) => {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error('認証されていません。');
-  }
+  const { supabase, user } = await getAuthenticatedClient();
 
   const { error: deleteError } = await supabase
     .from('follows')
