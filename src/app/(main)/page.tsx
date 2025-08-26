@@ -1,9 +1,5 @@
-import PostForm from '@/components/features/posts/PostForm/PostForm';
-import PostList from '@/components/features/posts/PostList/PostList';
-import { TimelineContext } from '@/contexts/TimelineContext';
+import { Timeline } from '@/components/features/timeline/Timeline';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-
-import styles from './page.module.scss';
 
 /**
  * メインページ（ホーム・タイムライン）
@@ -63,22 +59,12 @@ const HomePage = async () => {
     }
   }
 
-  const TimelineContextValue = {
+  const timelineContextValue = {
     userId: user?.id ?? null,
     likedPostIds,
     followingUserIds,
   };
 
-  return (
-    <>
-      <header className={styles.header}>
-        <h2 className={styles.title}>タイムライン</h2>
-        <PostForm />
-      </header>
-      <TimelineContext value={TimelineContextValue}>
-        <PostList posts={posts} />
-      </TimelineContext>
-    </>
-  );
+  return <Timeline posts={posts} timelineContextValue={timelineContextValue} />;
 };
 export default HomePage;
