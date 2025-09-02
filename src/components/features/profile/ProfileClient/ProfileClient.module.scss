@@ -1,0 +1,91 @@
+@use 'styles/variables' as *;
+
+// プロフィールページ全体のコンテナ
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: $color-white;
+  border: 1px solid $color-gray-medium;
+  border-radius: 8px;
+}
+
+// ユーザー名
+.userName {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: bold;
+  word-break: break-all;
+}
+
+// 語尾
+.gobi {
+  color: $color-gray-dark;
+}
+
+// フォロー・フォロワー数のセクション
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.statValue {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: $color-gray-dark;
+}
+
+// タブボタンのコンテナ
+.tabs {
+  display: flex;
+  border-bottom: 1px solid $color-gray-medium;
+}
+
+// 個別のタブボタン
+.tab {
+  margin-bottom: -1px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: $color-gray-dark;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    color: darken($color-gray-dark, 20%);
+  }
+}
+
+// アクティブなタブボタンのスタイル
+.tabActive {
+  color: $color-primary;
+  border-bottom-color: $color-primary;
+}
+
+// 投稿一覧が表示されるコンテンツエリア
+.content {
+  margin-top: 1.5rem;
+}
