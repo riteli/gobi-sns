@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useTimeline } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
 
@@ -27,7 +29,9 @@ const PostCard = ({ post }: PostCardProps) => {
     <li>
       <article className={styles.card}>
         <header className={styles.header}>
-          <span className={styles.userName}>{post.profiles?.user_name ?? '名無しさん'}</span>
+          <Link href={`/profile/${post.user_id}`} className={styles.userNameLink}>
+            <span className={styles.userName}>{post.profiles?.user_name ?? '名無しさん'}</span>
+          </Link>
           {/* 投稿者本人以外のみフォローボタンを表示 */}
           {!isOwnPost && <FollowButton targetUserId={post.user_id} />}
         </header>

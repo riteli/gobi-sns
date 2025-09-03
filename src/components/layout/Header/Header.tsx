@@ -26,6 +26,9 @@ const Header = async () => {
       {/* ログイン済みユーザー向けナビゲーション */}
       {session && (
         <nav className={styles.nav}>
+          <Button href={`/profile/${session.user.id}`} variant="secondary">
+            マイプロフィール
+          </Button>
           <Button href="/account/profile" variant="secondary">
             プロフィール設定
           </Button>
