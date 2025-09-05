@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { createPostSchema, profileSchema, signupSchema, loginSchema } from './schema';
+import { createPostSchema, profileSchema, signupSchema, loginSchema, avatarSchema } from './schema';
 import { createSupabaseServerClient } from './supabase/server';
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -272,4 +272,75 @@ export const unfollowUser = async (userIdToUnfollow: string) => {
     throw new Error('フォローの解除に失敗しました。');
   }
   revalidatePath('/');
+};
+
+/**
+ * アバター画像をアップロードし、プロフィール情報を更新する
+ */
+export const uploadAvatar = async (formData: FormData) => {
+  const { supabase, user } = await getAuthenticatedClient();
+
+  // FormDataからファイルを取得し、バリデーション
+  const avatarFile = formData.get('avatarFile');
+  const result = avatarSchema.safeParse({ avatarFile });
+
+  if (!result.success) {
+    throw new Error('JPGまたはPNG形式の5MB以下の画像を選択してください。');
+  }
+
+  const file = result.data.avatarFile;
+  const filePath = user.id;
+  const { error: uploadError } = await supabase.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true });
+
+  if (uploadError) {
+    console.error(uploadError);
+    throw new Error('アイコンのアップロードに失敗しました。');
+  }
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from('avatars').getPublicUrl(filePath);
+
+  const cacheBustedUrl = `${publicUrl}?t=${new Date().getTime().toString()}`;
+
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ avatar_url: cacheBustedUrl })
+    .eq('id', user.id);
+
+  if (updateError) {
+    console.error(updateError);
+    throw new Error('プロフィール情報の更新に失敗しました。');
+  }
+
+  revalidatePath('/account/profile');
+  revalidatePath(`/profile/${user.id}`);
+};
+
+/**
+ * アバター画像を削除し、プロフィール情報を更新する
+ */
+export const deleteAvatar = async () => {
+  const { supabase, user } = await getAuthenticatedClient();
+
+  // Storageからファイルを削除
+  const { error: removeError } = await supabase.storage.from('avatars').remove([user.id]);
+  if (removeError) {
+    console.error(removeError);
+  }
+
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ avatar_url: null })
+    .eq('id', user.id);
+
+  if (updateError) {
+    console.error(updateError);
+    throw new Error('プロフィール情報の更新に失敗しました。');
+  }
+
+  revalidatePath('/account/profile');
+  revalidatePath(`/profile/${user.id}`);
 };
