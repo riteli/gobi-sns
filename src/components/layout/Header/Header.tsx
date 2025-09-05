@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
 import { logout } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
@@ -11,11 +12,15 @@ import styles from './Header.module.scss';
  * 認証状態に応じてナビゲーションを表示
  */
 const Header = async () => {
-  // Supabaseクライアントを作成してセッション情報を取得
   const supabase = await createSupabaseServerClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // ログインユーザーのプロフィール情報を取得
+  const { data: profile } = user
+    ? await supabase.from('profiles').select('avatar_url').eq('id', user.id).single()
+    : { data: null };
 
   return (
     <header className={styles.header}>
@@ -24,19 +29,21 @@ const Header = async () => {
       </h1>
 
       {/* ログイン済みユーザー向けナビゲーション */}
-      {session && (
+      {user && (
         <nav className={styles.nav}>
-          <Button href={`/profile/${session.user.id}`} variant="secondary">
-            マイプロフィール
-          </Button>
           <Button href="/account/profile" variant="secondary">
             プロフィール設定
           </Button>
+
           <form action={logout}>
             <Button type="submit" variant="secondary">
               ログアウト
             </Button>
           </form>
+
+          <Link href={`/profile/${user.id}`} className={styles.avatarLink}>
+            <Avatar avatarUrl={profile?.avatar_url ?? null} size={40} />
+          </Link>
         </nav>
       )}
     </header>

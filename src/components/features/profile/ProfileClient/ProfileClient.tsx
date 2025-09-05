@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import PostList from '@/components/features/posts/PostList/PostList';
+import { Avatar } from '@/components/ui/Avatar/Avatar';
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
 import { PostWithProfile } from '@/types';
 
@@ -11,6 +12,7 @@ import styles from './ProfileClient.module.scss';
 type ProfileClientProps = {
   userName: string | null;
   currentGobi: string | null;
+  avatarUrl: string | null;
   followingCount: number;
   followerCount: number;
   userPosts: PostWithProfile[] | null;
@@ -26,6 +28,7 @@ export const ProfileClient = (props: ProfileClientProps) => {
   const {
     userName,
     currentGobi,
+    avatarUrl,
     followingCount,
     followerCount,
     userPosts,
@@ -48,6 +51,7 @@ export const ProfileClient = (props: ProfileClientProps) => {
   return (
     <section className={styles.profile}>
       <header className={styles.profileHeader}>
+        <Avatar avatarUrl={avatarUrl} size={80} />{' '}
         <div className={styles.mainInfo}>
           <h2 className={styles.userName}>{userName}</h2>
           <p className={styles.gobi}>語尾：{currentGobi}</p>

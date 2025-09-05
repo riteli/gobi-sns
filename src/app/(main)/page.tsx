@@ -16,7 +16,7 @@ const HomePage = async () => {
   // 投稿データをプロフィール情報と一緒に取得（新しい順）
   const { data: posts } = await supabase
     .from('posts')
-    .select('*, profiles(user_name), likes(count)')
+    .select('*, profiles(user_name, avatar_url), likes(count)')
     .order('created_at', { ascending: false });
 
   // ログインユーザーがいいねした投稿IDを格納するSet

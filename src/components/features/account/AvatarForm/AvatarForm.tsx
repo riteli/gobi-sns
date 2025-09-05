@@ -1,8 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { FaUserCircle } from 'react-icons/fa';
-
+import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
 import { useAvatarForm } from '@/hooks/useAvatarForm';
 
@@ -38,19 +36,7 @@ export const AvatarForm = ({ avatarUrl }: AvatarFormProps) => {
       }}
       className={styles.container}
     >
-      <div className={styles.avatarWrapper}>
-        {currentAvatarSrc ? (
-          <Image
-            src={currentAvatarSrc}
-            alt="ユーザーアイコン画像"
-            width={128}
-            height={128}
-            className={styles.avatar}
-          />
-        ) : (
-          <FaUserCircle size={128} className={styles.defaultAvatar} />
-        )}
-      </div>
+      <Avatar avatarUrl={currentAvatarSrc} size={128} />
 
       {/* 見た目上は隠されているファイル選択input */}
       <input

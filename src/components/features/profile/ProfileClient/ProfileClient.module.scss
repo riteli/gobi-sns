@@ -9,12 +9,31 @@
 
 .profileHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 1.5rem;
   padding: 1.5rem;
   background-color: $color-white;
   border: 1px solid $color-gray-medium;
   border-radius: 8px;
+}
+
+.avatarWrapper {
+  flex-shrink: 0;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  color: $color-gray-light;
+  background-color: $color-gray-medium;
+  border-radius: 50%;
+}
+
+.mainInfo {
+  flex-grow: 1;
 }
 
 // ユーザー名
