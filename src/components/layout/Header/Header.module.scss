@@ -28,3 +28,20 @@
   align-items: center;
   gap: 1.5rem; // ナビゲーション要素間の余白
 }
+
+// プロフィールページに飛ぶリンク
+.avatarLink {
+  display: flex;
+  align-items: center;
+}
+
+// ログインユーザーのアイコン
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// デフォルトのアイコン
+.defaultAvatar {
+  color: $color-gray-medium;
+}

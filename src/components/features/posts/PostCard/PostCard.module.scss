@@ -16,10 +16,14 @@
   gap: 1rem;
 }
 
+
 // ユーザー名用のリンク
 .userNameLink {
   color: inherit; // 親要素の文字色を継承する
   text-decoration: none; // 下線を削除
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 
   // ホバーした時だけ下線を表示して、リンクであることを分かりやすくする
   &:hover {

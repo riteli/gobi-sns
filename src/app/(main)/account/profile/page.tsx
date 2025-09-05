@@ -1,3 +1,4 @@
+import { AvatarForm } from '@/components/features/account/AvatarForm/AvatarForm';
 import { ProfileForm } from '@/components/features/account/ProfileForm/ProfileForm';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -24,6 +25,7 @@ const ProfilePage = async () => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>プロフィール設定</h2>
+      <AvatarForm avatarUrl={profile?.avatar_url ?? null} />
       <ProfileForm profile={profile} />
     </div>
   );

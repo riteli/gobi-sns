@@ -54,3 +54,19 @@ export const signupSchema = z
     message: 'パスワードが一致しません。',
     path: ['password_confirm'],
   });
+
+/**
+ * アバター画像アップロード用のバリデーションスキーマ
+ */
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
+
+export const avatarSchema = z.object({
+  avatarFile: z
+    .instanceof(File)
+    .refine((file) => file.size <= MAX_FILE_SIZE, '画像サイズは5MBまでです。')
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      'JPGまたはPNG形式の画像を選択してください。',
+    ),
+});

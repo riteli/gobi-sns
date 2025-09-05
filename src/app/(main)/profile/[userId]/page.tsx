@@ -53,17 +53,21 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
     usersPostsResult,
     likedPostsResult,
   ] = await Promise.all([
-    supabase.from('profiles').select('user_name, current_gobi').eq('id', userId).single(),
+    supabase
+      .from('profiles')
+      .select('user_name, current_gobi, avatar_url')
+      .eq('id', userId)
+      .single(),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId),
     supabase
       .from('posts')
-      .select('*, profiles(user_name), likes(count)')
+      .select('*, profiles(user_name, avatar_url), likes(count)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false }),
     supabase
       .from('posts')
-      .select('*, profiles(user_name), likes(count)')
+      .select('*, profiles(user_name, avatar_url), likes(count)')
       .in('id', profileUserLikedPostIds)
       .order('created_at', { ascending: false }),
   ]);
@@ -88,6 +92,7 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
     <ProfileClient
       userName={profile.user_name}
       currentGobi={profile.current_gobi}
+      avatarUrl={profile.avatar_url}
       followingCount={followingCount}
       followerCount={followerCount}
       userPosts={usersPosts}
