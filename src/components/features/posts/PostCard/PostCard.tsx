@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { Avatar } from '@/components/ui/Avatar/Avatar';
+import { ClientFormattedTime } from '@/components/ui/ClientFormattedTime/ClientFormattedTime';
 import { useTimeline } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
 
@@ -48,9 +49,7 @@ const PostCard = ({ post }: PostCardProps) => {
             {/* 投稿者本人のみ削除ボタンを表示 */}
             {isOwnPost && <DeletePostButton postId={post.id} />}
           </div>
-          <time dateTime={post.created_at} className={styles.time}>
-            {new Date(post.created_at).toLocaleString()}
-          </time>
+          <ClientFormattedTime dateString={post.created_at} />
         </footer>
       </article>
     </li>

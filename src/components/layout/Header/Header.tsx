@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { SearchBar } from '@/components/features/search/SearchBar/SearchBar';
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
 import { logout } from '@/lib/actions';
@@ -44,6 +45,8 @@ const Header = async () => {
           <Link href={`/profile/${user.id}`} className={styles.avatarLink}>
             <Avatar avatarUrl={profile?.avatar_url ?? null} size={40} />
           </Link>
+
+          <SearchBar />
         </nav>
       )}
     </header>

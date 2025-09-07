@@ -1,0 +1,49 @@
+@use 'styles/variables' as *;
+
+// フォーム全体のコンテナ
+.searchForm {
+  display: flex;
+  align-items: center;
+  border: 1px solid $color-gray-medium;
+  border-radius: 9999px; // 角を丸くしてカプセル型に
+  background-color: $color-white;
+  overflow: hidden; // 子要素がはみ出ないように
+
+  // フォーカス時にフォーム全体をハイライト
+  &:focus-within {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+}
+
+// 検索キーワードの入力欄
+.searchInput {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  width: 200px;
+  background-color: transparent;
+
+  &::placeholder {
+    color: $color-gray-medium;
+  }
+}
+
+// 検索実行ボタン
+.searchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  padding-right: 0.75rem; // アイコンの右側に少し余白を追加
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: $color-gray-dark;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
