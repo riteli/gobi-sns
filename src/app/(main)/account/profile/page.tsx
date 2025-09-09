@@ -1,4 +1,5 @@
 import { AvatarForm } from '@/components/features/account/AvatarForm/AvatarForm';
+import { DeleteAccountForm } from '@/components/features/account/DeleteAccountForm/DeleteAccountForm';
 import { ProfileForm } from '@/components/features/account/ProfileForm/ProfileForm';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
@@ -27,6 +28,7 @@ const ProfilePage = async () => {
       <h2 className={styles.title}>プロフィール設定</h2>
       <AvatarForm avatarUrl={profile?.avatar_url ?? null} />
       <ProfileForm profile={profile} />
+      <DeleteAccountForm />
     </div>
   );
 };

@@ -365,3 +365,29 @@ export const searchPosts = async (query: string) => {
 
   return posts;
 };
+
+/**
+ * 入力されたパスワードを確認し、アカウントを削除する
+ */
+export const deleteAccount = async (password: string) => {
+  const { supabase, user } = await getAuthenticatedClient();
+
+  if (!user.email) {
+    throw new Error('予期せぬエラーが発生しました。');
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email: user.email, password });
+
+  if (error) {
+    throw new Error('パスワードが間違っています。');
+  }
+
+  const { error: deleteError } = await supabase.rpc('delete_user');
+
+  if (deleteError) {
+    console.error(deleteError);
+    throw new Error('アカウントの削除中にエラーが発生しました。');
+  }
+
+  await logout();
+};
