@@ -70,3 +70,11 @@ export const avatarSchema = z.object({
       'JPGまたはPNG形式の画像を選択してください。',
     ),
 });
+
+/**
+ * アカウント削除用のバリデーションスキーマ
+ */
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, 'パスワードを入力してください'),
+  confirm: z.boolean().refine((boolean) => boolean, '同意チェックボックスをオンにしてください。'),
+});

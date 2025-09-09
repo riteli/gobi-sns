@@ -1,0 +1,83 @@
+@use 'styles/variables' as *;
+
+// フォーム全体のコンテナ
+.form {
+  background-color: lighten($color-error, 40%);
+  border: 1px solid $color-error;
+  border-radius: 8px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// 注意書きのタイトル
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $color-error;
+  margin: 0;
+}
+
+// 注意書き
+.notice {
+  padding-left: 1.5rem;
+  color: crimson;
+}
+
+// 各フォーム項目のグループ
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// ラベルスタイル
+.label {
+  font-weight: bold;
+}
+
+// 入力フィールドのスタイル
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid $color-gray-medium;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+}
+
+// チェックボックスのコンテナ
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// チェックボックスのラベル
+.checkboxLabel {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+// チェックボックス
+.checkbox {
+ transform: scale(1.2);
+}
+
+// エラーメッセージ
+.errorMessage {
+  color: $color-error;
+  margin-top: 0.25rem;
+}
+
+// 削除ボタンのコンテナ
+.buttonContainer {
+  display: flex;
+  justify-content: flex-end;
+}
