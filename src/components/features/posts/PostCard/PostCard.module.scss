@@ -4,6 +4,7 @@
 .card {
   background-color: $color-white;
   border: 1px solid $color-gray-medium;
+  border-top: 5px solid $color-primary;
   border-radius: 8px;
   padding: 1rem;
 }
@@ -15,7 +16,6 @@
   align-items: flex-start;
   gap: 1rem;
 }
-
 
 // ユーザー名用のリンク
 .userNameLink {

@@ -3,7 +3,7 @@ import { type ComponentPropsWithoutRef, type FC, type ReactNode } from 'react';
 
 import styles from './Button.module.scss';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'accent';
 type ButtonSize = 'medium' | 'small';
 
 /** ボタンとリンクで共通する、見た目に関する基本的なProps */
