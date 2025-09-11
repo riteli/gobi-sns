@@ -32,7 +32,7 @@ const Header = async () => {
       {/* ログイン済みユーザー向けナビゲーション */}
       {user && (
         <nav className={styles.nav}>
-          <Button href="/account/profile" variant="secondary">
+          <Button href="/account/profile" variant="accent">
             プロフィール設定
           </Button>
 

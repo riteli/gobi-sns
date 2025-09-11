@@ -31,7 +31,7 @@ const PostForm = () => {
     return (
       <Button
         type="button"
-        variant="secondary"
+        variant="accent"
         onClick={() => {
           setIsExpanded(true);
         }}
