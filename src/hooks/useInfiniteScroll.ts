@@ -79,7 +79,8 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null, fetche
         dispatch({ type: 'MERGE_UPDATED_POSTS', payload: initialPosts });
       }
     }
-  }, [initialPosts, state.posts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPosts]);
 
   const { ref, inView } = useInView({
     threshold: 0,

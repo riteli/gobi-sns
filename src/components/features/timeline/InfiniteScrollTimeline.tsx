@@ -2,6 +2,7 @@
 
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { fetchPosts } from '@/lib/actions';
 import { type PostWithProfile } from '@/types';
 
 import PostList from '../posts/PostList/PostList';
@@ -18,7 +19,7 @@ export const InfiniteScrollTimeline = ({
   initialPosts,
   timelineContextValue,
 }: InfiniteScrollTimelineProps) => {
-  const { posts, isLoading, ref } = useInfiniteScroll(initialPosts);
+  const { posts, isLoading, ref } = useInfiniteScroll(initialPosts, fetchPosts);
 
   return (
     <TimelineContext.Provider value={timelineContextValue}>
