@@ -1,0 +1,23 @@
+// === カラーパレット ===
+
+// Brand Colors
+$color-primary: #f17105;
+$color-accent: #6e44ff;
+
+// Grays
+$color-white: #fff;
+$color-gray-dark: #434a54; // 濃いテキスト用
+$color-gray-medium: #a0aec0; // 薄いテキスト、ボーダー用
+$color-gray-light: #f7fafc; // 背景色用
+
+// Status Colors
+$color-error: #ed5565;
+
+// === タイポグラフィ ===
+
+// システムフォントスタック（アクセシビリティを考慮）
+$font-family-base:
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+  sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+$font-size-base: 1rem;
+$line-height-base: 1.6; // 読みやすさを考慮した行間

@@ -1,11 +1,13 @@
-import { redirect } from 'next/navigation';
-
-import { updateProfile } from '@/lib/actions';
+import { AvatarForm } from '@/components/features/account/AvatarForm/AvatarForm';
+import { DeleteAccountForm } from '@/components/features/account/DeleteAccountForm/DeleteAccountForm';
+import { ProfileForm } from '@/components/features/account/ProfileForm/ProfileForm';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+import styles from './page.module.scss';
+
 /**
- * プロフィール設定ページ
- * 認証が必要で、ユーザー名とカスタム語尾を編集可能
+ * プロフィール設定ページ（サーバーコンポーネント）
+ * ページの表示に必要なデータを事前に取得し、クライアントコンポーネントに渡す
  */
 const ProfilePage = async () => {
   const supabase = await createSupabaseServerClient();
@@ -13,34 +15,20 @@ const ProfilePage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 未認証の場合はログインページにリダイレクト
   if (!user) {
-    redirect('/login');
+    // middlewareで保護されているが、念のため
+    return null;
   }
 
   // 現在のプロフィール情報を取得
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
 
   return (
-    <div>
-      <h2>プロフィール設定</h2>
-      <form action={updateProfile}>
-        <div>
-          <label htmlFor="username">ユーザー名</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            defaultValue={profile?.user_name ?? ''}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="gobi">カスタム語尾</label>
-          <input type="text" name="gobi" id="gobi" defaultValue={profile?.current_gobi ?? ''} />
-        </div>
-        <button type="submit">更新する</button>
-      </form>
+    <div className={styles.container}>
+      <h2 className={styles.title}>プロフィール設定</h2>
+      <AvatarForm avatarUrl={profile?.avatar_url ?? null} />
+      <ProfileForm profile={profile} />
+      <DeleteAccountForm />
     </div>
   );
 };

@@ -1,6 +1,9 @@
 import PostForm from '@/components/features/posts/PostForm/PostForm';
-import PostList from '@/components/features/posts/PostList/PostList';
+import { InfiniteScrollTimeline } from '@/components/features/timeline/InfiniteScrollTimeline';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getTimelineContextValue } from '@/lib/utils';
+
+import styles from './page.module.scss';
 
 /**
  * メインページ（ホーム・タイムライン）
@@ -8,20 +11,30 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
  */
 const HomePage = async () => {
   const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // 投稿データをプロフィール情報と一緒に取得（新しい順）
-  const { data: posts } = await supabase
-    .from('posts')
-    .select('*, profiles(user_name)')
-    .order('created_at', { ascending: false });
+  const PAGE_SIZE = 10;
+
+  // 投稿データとContextの値を並行して取得
+  const [{ data: posts }, timelineContextValue] = await Promise.all([
+    supabase
+      .from('posts')
+      .select('*, profiles(user_name, avatar_url), likes(count)')
+      .order('created_at', { ascending: false })
+      .range(0, PAGE_SIZE - 1),
+    getTimelineContextValue(supabase, user),
+  ]);
 
   return (
     <>
-      <h2>タイムライン</h2>
-      <PostForm />
-      <PostList posts={posts} />
+      <header className={styles.header}>
+        <h2 className={styles.title}>タイムライン</h2>
+        <PostForm />
+      </header>
+      <InfiniteScrollTimeline initialPosts={posts} timelineContextValue={timelineContextValue} />
     </>
   );
 };
-
 export default HomePage;

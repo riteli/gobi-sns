@@ -1,0 +1,47 @@
+@use 'styles/variables' as *;
+
+// ヘッダーのメインコンテナ
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-white;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid $color-gray-medium; // ヘッダーとコンテンツの境界線
+}
+
+// サイトロゴ・タイトル
+.logo {
+  margin: 0; // h1のデフォルトマージンをリセット
+  font-size: 1.5rem;
+
+  a {
+    text-decoration: none;
+    color: $color-primary;
+    font-weight: bold;
+  }
+}
+
+// ナビゲーションエリア
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; // ナビゲーション要素間の余白
+}
+
+// プロフィールページに飛ぶリンク
+.avatarLink {
+  display: flex;
+  align-items: center;
+}
+
+// ログインユーザーのアイコン
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+// デフォルトのアイコン
+.defaultAvatar {
+  color: $color-gray-medium;
+}

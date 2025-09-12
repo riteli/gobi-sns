@@ -1,0 +1,40 @@
+@use 'styles/variables' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  border: 1px solid $color-gray-medium;
+  border-radius: 8px;
+  background-color: $color-white;
+}
+
+.avatarWrapper {
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid $color-gray-medium;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  color: $color-gray-medium;
+}
+
+// ファイル選択inputは視覚的に隠す
+.fileInput {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}

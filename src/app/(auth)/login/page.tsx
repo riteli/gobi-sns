@@ -1,78 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import Link from 'next/link';
 
-import { login } from '@/lib/actions';
+import Button from '@/components/ui/Button/Button';
+import { useLoginForm } from '@/hooks/useLoginForm';
 
-import styles from './page.module.scss';
+import styles from '../authForm.module.scss';
 
+/**
+ * ユーザーログインページ
+ * メールアドレスとパスワードでの認証を行う
+ */
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    try {
-      await login(formData);
-    } catch (error) {
-      if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
-        throw error;
-      }
-
-      if (error instanceof Error) {
-        alert('エラー：' + error.message);
-      } else {
-        alert('予期せぬエラーが発生しました。');
-      }
-    }
-  };
+  const { form, onSubmit } = useLoginForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
   return (
-    <main>
-      <h1>ログイン</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <fieldset>
+    <main className={styles.container}>
+      <h1 className={styles.title}>ログイン</h1>
+
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <fieldset className={styles.fieldset}>
           <legend className={styles.srOnly}>ログイン情報</legend>
-          <div>
-            <label htmlFor="email">メールアドレス</label>
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.label}>
+              メールアドレス
+            </label>
             <input
-              className={styles.input}
               type="email"
-              name="email"
-              id="email"
-              required
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">パスワード</label>
-            <input
               className={styles.input}
-              type="password"
-              name="password"
-              id="password"
-              required
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              id="email"
+              autoComplete="username"
+              {...register('email')}
             />
+            {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
           </div>
-          <div>
-            <button className={styles.button} type="submit">
-              ログイン
-            </button>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.label}>
+              パスワード
+            </label>
+            <input
+              type="password"
+              className={styles.input}
+              id="password"
+              autoComplete="current-password"
+              {...register('password')}
+            />
+            {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
           </div>
+
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'ログイン中...' : 'ログイン'}
+          </Button>
         </fieldset>
       </form>
+
+      <div className={styles.linkContainer}>
+        <p>
+          アカウントをお持ちでないですか？{' '}
+          <Link href="/signup" className={styles.link}>
+            新規登録
+          </Link>
+        </p>
+      </div>
     </main>
   );
 };

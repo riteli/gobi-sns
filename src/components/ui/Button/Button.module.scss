@@ -1,0 +1,74 @@
+@use 'styles/variables' as *;
+
+// ボタンの基本スタイル
+.button {
+  border: none;
+  border-radius: 9999px;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+
+  // クリック時の視覚的フィードバック
+  &:active {
+    transform: translateY(1px);
+  }
+
+  // 無効状態のスタイリング
+  &:disabled {
+    background-color: $color-gray-medium;
+    color: $color-gray-light;
+    cursor: not-allowed;
+  }
+}
+
+// サイズバリアント
+.medium {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+}
+
+.small {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+// カラーバリアント
+.primary {
+  background-color: $color-primary;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+.secondary {
+  background-color: $color-gray-light;
+  color: $color-gray-dark;
+  border: 1px solid $color-gray-medium;
+
+  &:hover:not(:disabled) {
+    background-color: darken($color-gray-light, 5%);
+  }
+}
+
+.danger {
+  background-color: $color-error;
+  color: $color-white; // 文字色も指定
+
+  &:hover:not(:disabled) {
+    background-color: darken($color-error, 10%);
+  }
+}
+
+.accent {
+  background-color: $color-accent;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: darken($color-accent, 10%);
+  }
+}

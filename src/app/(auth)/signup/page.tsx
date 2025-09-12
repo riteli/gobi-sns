@@ -1,101 +1,90 @@
 'use client';
 
-import React, { useState } from 'react';
+import Link from 'next/link';
 
-import { signup } from '@/lib/actions';
+import Button from '@/components/ui/Button/Button';
+import { useSignUpForm } from '@/hooks/useSignUpForm';
 
-import styles from './page.module.scss';
+import styles from '../authForm.module.scss';
 
+/**
+ * ユーザー新規登録ページ
+ * メールアドレス・パスワードでアカウントを作成し、確認メールを送信
+ */
 const SignUpPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const { form, onSubmit } = useSignUpForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = form;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (password !== passwordConfirm) {
-      alert('パスワードが一致しません');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    try {
-      await signup(formData);
-
-      setEmail('');
-      setPassword('');
-      setPasswordConfirm('');
-      alert('確認メールを送信しました。メールボックスを確認してください。');
-    } catch (error) {
-      if (error instanceof Error) {
-        alert('エラー：' + error.message);
-      } else {
-        alert('予期せぬエラーが発生しました。');
-      }
-    }
-  };
   return (
-    <main>
-      <h1>アカウント登録</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <fieldset>
+    <main className={styles.container}>
+      <h1 className={styles.title}>アカウント登録</h1>
+
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <fieldset className={styles.fieldset}>
           <legend className={styles.srOnly}>アカウント情報</legend>
-          <div>
-            <label htmlFor="email">メールアドレス</label>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.label}>
+              メールアドレス
+            </label>
             <input
-              className={styles.input}
               type="email"
-              name="email"
+              className={styles.input}
               id="email"
-              required
-              aria-describedby="email-error"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              autoComplete="username"
+              {...register('email')}
             />
+            {errors.email && <p className={styles.errorMessage}>{errors.email.message}</p>}
           </div>
-          <div>
-            <label htmlFor="password">パスワード</label>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.label}>
+              パスワード
+            </label>
             <input
-              className={styles.input}
               type="password"
-              name="password"
+              className={styles.input}
               id="password"
-              required
-              aria-describedby="password-error"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              autoComplete="new-password"
+              {...register('password')}
             />
+            {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
           </div>
-          <div>
-            <label htmlFor="password_confirm">パスワード（確認）</label>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="password_confirm" className={styles.label}>
+              パスワード（確認）
+            </label>
             <input
-              className={styles.input}
               type="password"
-              name="password_confirm"
+              className={styles.input}
               id="password_confirm"
-              required
-              aria-describedby="password-confirm-error"
-              value={passwordConfirm}
-              onChange={(e) => {
-                setPasswordConfirm(e.target.value);
-              }}
+              autoComplete="new-password"
+              {...register('password_confirm')}
             />
+            {errors.password_confirm && (
+              <p className={styles.errorMessage}>{errors.password_confirm.message}</p>
+            )}
           </div>
-          <div>
-            <button className={styles.button} type="submit">
-              登録する
-            </button>
-          </div>
+
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? '登録中...' : '登録する'}
+          </Button>
         </fieldset>
       </form>
+
+      <div className={styles.linkContainer}>
+        <p>
+          すでにアカウントをお持ちですか？{' '}
+          <Link href="/login" className={styles.link}>
+            ログイン
+          </Link>
+        </p>
+      </div>
     </main>
   );
 };

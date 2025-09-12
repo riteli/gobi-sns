@@ -1,8 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
+import { Avatar } from '@/components/ui/Avatar/Avatar';
+import { ClientFormattedTime } from '@/components/ui/ClientFormattedTime/ClientFormattedTime';
+import { useTimeline } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
+
+import { DeletePostButton } from './DeletePostButton/DeletePostButton';
+import { FollowButton } from './FollowButton/FollowButton';
+import { LikeButton } from './LikeButton/LikeButton';
+import styles from './PostCard.module.scss';
 
 type PostCardProps = {
   post: PostWithProfile;
@@ -10,28 +18,40 @@ type PostCardProps = {
 
 /**
  * 個別の投稿を表示するカードコンポーネント
- * ハイドレーションエラーを防ぐためクライアントサイドでのみ日時を表示
+ * 投稿者本人のみ削除ボタンを表示
  */
 const PostCard = ({ post }: PostCardProps) => {
-  const [isClient, setIsClient] = useState(false);
+  // Contextからデータを取得
+  const { userId } = useTimeline();
 
-  // クライアントサイドでのマウント後にフラグを立てる
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // 現在のユーザーが投稿者かどうかを判定
+  const isOwnPost = userId && userId === post.user_id;
 
   return (
     <li>
-      <p>
-        <strong>{post.profiles?.user_name ?? '名無しさん'}</strong>
-      </p>
-      <p>{post.content}</p>
-      {/* サーバーとクライアントの日時表示差異を防ぐため条件分岐 */}
-      {isClient && (
-        <p>
-          <time dateTime={post.created_at}>{new Date(post.created_at).toLocaleString()}</time>
-        </p>
-      )}
+      <article className={styles.card}>
+        <header className={styles.header}>
+          <Link href={`/profile/${post.user_id}`} className={styles.userNameLink}>
+            <Avatar avatarUrl={post.profiles?.avatar_url ?? null} size={48} />
+            <span className={styles.userName}>{post.profiles?.user_name ?? '名無しさん'}</span>
+          </Link>
+          {/* 投稿者本人以外のみフォローボタンを表示 */}
+          {!isOwnPost && <FollowButton targetUserId={post.user_id} />}
+        </header>
+
+        <main>
+          <p className={styles.content}>{post.content}</p>
+        </main>
+
+        <footer>
+          <div className={styles.actions}>
+            <LikeButton post={post} />
+            {/* 投稿者本人のみ削除ボタンを表示 */}
+            {isOwnPost && <DeletePostButton postId={post.id} />}
+          </div>
+          <ClientFormattedTime dateString={post.created_at} />
+        </footer>
+      </article>
     </li>
   );
 };

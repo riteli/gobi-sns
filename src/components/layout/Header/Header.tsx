@@ -1,32 +1,52 @@
 import Link from 'next/link';
 
+import { SearchBar } from '@/components/features/search/SearchBar/SearchBar';
+import { Avatar } from '@/components/ui/Avatar/Avatar';
+import Button from '@/components/ui/Button/Button';
 import { logout } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+
+import styles from './Header.module.scss';
 
 /**
  * アプリケーション全体のヘッダーコンポーネント
  * 認証状態に応じてナビゲーションを表示
  */
 const Header = async () => {
-  // Supabaseクライアントを作成してセッション情報を取得
   const supabase = await createSupabaseServerClient();
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // ログインユーザーのプロフィール情報を取得
+  const { data: profile } = user
+    ? await supabase.from('profiles').select('avatar_url').eq('id', user.id).single()
+    : { data: null };
 
   return (
-    <header>
-      <h1>
+    <header className={styles.header}>
+      <h1 className={styles.logo}>
         <Link href="/">Gobi SNS</Link>
       </h1>
 
       {/* ログイン済みユーザー向けナビゲーション */}
-      {session && (
-        <nav>
-          <Link href="/account/profile">プロフィール設定</Link>
+      {user && (
+        <nav className={styles.nav}>
+          <Button href="/account/profile" variant="accent">
+            プロフィール設定
+          </Button>
+
           <form action={logout}>
-            <button type="submit">ログアウト</button>
+            <Button type="submit" variant="secondary">
+              ログアウト
+            </Button>
           </form>
+
+          <Link href={`/profile/${user.id}`} className={styles.avatarLink}>
+            <Avatar avatarUrl={profile?.avatar_url ?? null} size={40} />
+          </Link>
+
+          <SearchBar />
         </nav>
       )}
     </header>
