@@ -1,5 +1,7 @@
 import { ProfileClient } from '@/components/features/profile/ProfileClient/ProfileClient';
+import { fetchUserLikedPosts, fetchUserPosts } from '@/lib/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getTimelineContextValue } from '@/lib/utils';
 
 /**
  * プロフィールページ（サーバーコンポーネント）
@@ -13,45 +15,17 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
     data: { user: loggedInUser },
   } = await supabase.auth.getUser();
 
-  // Context用: ログインユーザー自身のいいね・フォロー情報を取得
-  const [loggedInUserLikesResult, loggedInUserFollowsResult] = loggedInUser
-    ? await Promise.all([
-        supabase.from('likes').select('post_id').eq('user_id', loggedInUser.id),
-        supabase.from('follows').select('following_id').eq('follower_id', loggedInUser.id),
-      ])
-    : [
-        { data: [], error: null },
-        { data: [], error: null },
-      ];
+  const PAGE_SIZE = 10;
 
-  const loggedInUserLikedPostIds = new Set(
-    (loggedInUserLikesResult.data ?? [])
-      .map((like) => like.post_id)
-      .filter((id): id is number => id !== null),
-  );
-  const loggedInUserFollowingIds = new Set(
-    (loggedInUserFollowsResult.data ?? [])
-      .map((follow) => follow.following_id)
-      .filter((id): id is string => id !== null),
-  );
-
-  // ページ表示用: プロフィール対象ユーザーがいいねした投稿ID一覧を取得
-  const { data: likedPostObjects } = await supabase
-    .from('likes')
-    .select('post_id')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  const profileUserLikedPostIds =
-    likedPostObjects?.map((likedPost) => likedPost.post_id).filter((id) => id !== null) ?? [];
+  const timelineContextValue = await getTimelineContextValue(supabase, loggedInUser);
 
   // ページに必要なデータを並行取得
   const [
     profileResult,
     followingCountResult,
     followerCountResult,
-    usersPostsResult,
-    likedPostsResult,
+    initialUserPosts,
+    initialLikedPosts,
   ] = await Promise.all([
     supabase
       .from('profiles')
@@ -60,29 +34,13 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
       .single(),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId),
-    supabase
-      .from('posts')
-      .select('*, profiles(user_name, avatar_url), likes(count)')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false }),
-    supabase
-      .from('posts')
-      .select('*, profiles(user_name, avatar_url), likes(count)')
-      .in('id', profileUserLikedPostIds)
-      .order('created_at', { ascending: false }),
+    fetchUserPosts(userId, 0, PAGE_SIZE),
+    fetchUserLikedPosts(userId, 0, PAGE_SIZE),
   ]);
 
   const profile = profileResult.data;
   const followingCount = followingCountResult.count ?? 0;
   const followerCount = followerCountResult.count ?? 0;
-  const usersPosts = usersPostsResult.data;
-  const likedPosts = likedPostsResult.data;
-
-  const timelineContextValue = {
-    userId: loggedInUser?.id ?? null,
-    likedPostIds: loggedInUserLikedPostIds,
-    followingUserIds: loggedInUserFollowingIds,
-  };
 
   if (!profile) {
     return <div>ユーザーが見つかりません</div>;
@@ -90,13 +48,14 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
 
   return (
     <ProfileClient
+      userId={userId}
       userName={profile.user_name}
       currentGobi={profile.current_gobi}
       avatarUrl={profile.avatar_url}
       followingCount={followingCount}
       followerCount={followerCount}
-      userPosts={usersPosts}
-      likedPosts={likedPosts}
+      initialUserPosts={initialUserPosts}
+      initialLikedPosts={initialLikedPosts}
       timelineContextValue={timelineContextValue}
     />
   );

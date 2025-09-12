@@ -1,22 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import PostList from '@/components/features/posts/PostList/PostList';
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { fetchUserPosts, fetchUserLikedPosts } from '@/lib/actions';
 import { PostWithProfile } from '@/types';
 
 import styles from './ProfileClient.module.scss';
 
 type ProfileClientProps = {
+  userId: string;
   userName: string | null;
   currentGobi: string | null;
   avatarUrl: string | null;
   followingCount: number;
   followerCount: number;
-  userPosts: PostWithProfile[] | null;
-  likedPosts: PostWithProfile[] | null;
+  initialUserPosts: PostWithProfile[] | null;
+  initialLikedPosts: PostWithProfile[] | null;
   timelineContextValue: TimelineContextType;
 };
 
@@ -26,18 +29,45 @@ type ProfileClientProps = {
  */
 export const ProfileClient = (props: ProfileClientProps) => {
   const {
+    userId,
     userName,
     currentGobi,
     avatarUrl,
     followingCount,
     followerCount,
-    userPosts,
-    likedPosts,
+    initialUserPosts,
+    initialLikedPosts,
     timelineContextValue,
   } = props;
 
   // 表示するタブ（'posts' or 'likes'）の状態
   const [activeTab, setActiveTab] = useState('posts');
+
+  // 投稿タブ用の無限スクロール
+  const userPostsFetcher = useCallback(
+    (page: number, pageSize: number) => {
+      return fetchUserPosts(userId, page, pageSize);
+    },
+    [userId],
+  );
+  const {
+    posts: userPosts,
+    isLoading: isUserPostsLoading,
+    ref: userPostsRef,
+  } = useInfiniteScroll(initialUserPosts, userPostsFetcher);
+
+  // いいねタブ用の無限スクロール
+  const likedPostsFetcher = useCallback(
+    (page: number, pageSize: number) => {
+      return fetchUserLikedPosts(userId, page, pageSize);
+    },
+    [userId],
+  );
+  const {
+    posts: likedPosts,
+    isLoading: isLikedPostsLoading,
+    ref: likedPostsRef,
+  } = useInfiniteScroll(initialLikedPosts, likedPostsFetcher);
 
   /**
    * タブがアクティブかどうかに基づいて動的なクラス名を生成する
@@ -92,8 +122,21 @@ export const ProfileClient = (props: ProfileClientProps) => {
       <div className={styles.content}>
         {/* PostList内部のコンポーネントがContextを必要とするため、ここで提供する */}
         <TimelineContext value={timelineContextValue}>
-          {activeTab === 'posts' && <PostList posts={userPosts} />}
-          {activeTab === 'likes' && <PostList posts={likedPosts} />}
+          {activeTab === 'posts' && (
+            <>
+              <PostList posts={userPosts} />
+              <div ref={userPostsRef} />
+              {isUserPostsLoading && <p style={{ textAlign: 'center' }}>読み込み中...</p>}
+            </>
+          )}
+
+          {activeTab === 'likes' && (
+            <>
+              <PostList posts={likedPosts} />
+              <div ref={likedPostsRef} />
+              {isLikedPostsLoading && <p style={{ textAlign: 'center' }}>読み込み中...</p>}
+            </>
+          )}
         </TimelineContext>
       </div>
     </section>
