@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
-import { usePostForm } from '@/hooks/usePostForm';
+import { usePostForm } from '@/features/posts/hooks/usePostForm';
 
 import styles from './PostForm.module.scss';
 

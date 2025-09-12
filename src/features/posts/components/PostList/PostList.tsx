@@ -1,4 +1,4 @@
-import PostCard from '@/components/features/posts/PostCard/PostCard';
+import PostCard from '@/features/posts/components/PostCard/PostCard';
 import { type PostWithProfile } from '@/types';
 
 import styles from './PostList.module.scss';

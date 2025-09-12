@@ -1,4 +1,4 @@
-import PostForm from '@/components/features/posts/PostForm/PostForm';
+import PostForm from '@/features/posts/components/PostForm/PostForm';
 import { InfiniteScrollTimeline } from '@/components/features/timeline/InfiniteScrollTimeline';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';

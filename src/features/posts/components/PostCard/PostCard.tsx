@@ -7,10 +7,10 @@ import { ClientFormattedTime } from '@/components/ui/ClientFormattedTime/ClientF
 import { useTimeline } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
 
-import { DeletePostButton } from './DeletePostButton/DeletePostButton';
-import { FollowButton } from './FollowButton/FollowButton';
-import { LikeButton } from './LikeButton/LikeButton';
 import styles from './PostCard.module.scss';
+import { DeletePostButton } from '../DeletePostButton/DeletePostButton';
+import { FollowButton } from '../FollowButton/FollowButton';
+import { LikeButton } from '../LikeButton/LikeButton';
 
 type PostCardProps = {
   post: PostWithProfile;

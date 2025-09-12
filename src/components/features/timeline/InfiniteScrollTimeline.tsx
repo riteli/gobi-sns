@@ -1,10 +1,10 @@
 'use client';
 
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
-import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { useInfiniteScroll } from '@/features/posts/hooks/useInfiniteScroll';
 import { type PostWithProfile } from '@/types';
 
-import PostList from '../posts/PostList/PostList';
+import PostList from '../../../features/posts/components/PostList/PostList';
 
 type InfiniteScrollTimelineProps = {
   initialPosts: PostWithProfile[] | null;

@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 import { useTimeline } from '@/contexts/TimelineContext';
-import { likePost, unlikePost } from '@/lib/actions';
+import { likePost, unlikePost } from '@/features/posts/actions';
 import { type PostWithProfile } from '@/types';
 
 import styles from './LikeButton.module.scss';

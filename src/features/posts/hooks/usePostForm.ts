@@ -3,10 +3,10 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 
-import { createPost } from '@/lib/actions';
+import { useProfileData } from '@/hooks/useProfileData';
 import { createPostSchema } from '@/lib/schema';
 
-import { useProfileData } from './useProfileData';
+import { createPost } from '../actions';
 
 type PostFormData = {
   content: string;

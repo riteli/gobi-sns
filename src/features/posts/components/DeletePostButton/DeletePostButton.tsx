@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
-import { deletePost } from '@/lib/actions';
+import { deletePost } from '@/features/posts/actions';
 
 type DeletePostButtonProps = {
   postId: number;

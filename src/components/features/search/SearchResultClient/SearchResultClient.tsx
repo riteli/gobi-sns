@@ -1,6 +1,6 @@
 'use client';
 
-import PostList from '@/components/features/posts/PostList/PostList';
+import PostList from '@/features/posts/components/PostList/PostList';
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
 
