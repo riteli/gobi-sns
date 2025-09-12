@@ -3,7 +3,6 @@
 import { useEffect, useReducer } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { fetchPosts } from '@/lib/actions';
 import { PostWithProfile } from '@/types';
 
 type State = {
@@ -38,11 +37,20 @@ const reducer = (state: State, action: Action): State => {
 };
 
 /**
+ * 無限スクロールで利用するデータ取得関数の型定義
+ * @param page - ページ番号
+ * @param pageSize - 1ページあたりの件数
+ * @returns 投稿の配列を返すPromise
+ */
+type Fetcher = (page: number, pageSize: number) => Promise<PostWithProfile[]>;
+
+/**
  * 投稿の無限スクロール機能を提供するカスタムフック
  * @param initialPosts - サーバーから最初に取得した投稿の配列
+ * @param fetcher - 追加の投稿データを取得するための非同期関数
  * @returns 投稿リスト、ローディング状態、および監視対象に設定するref
  */
-export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
+export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null, fetcher: Fetcher) => {
   const PAGE_SIZE = 10;
 
   const initialState: State = {
@@ -69,7 +77,7 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
       const loadMorePosts = async () => {
         dispatch({ type: 'SET_IS_LOADING', payload: true });
         try {
-          const newPosts = await fetchPosts(state.page, PAGE_SIZE);
+          const newPosts = await fetcher(state.page, PAGE_SIZE);
 
           if (!newPosts.length) {
             dispatch({ type: 'SET_HAS_MORE', payload: false });
@@ -85,7 +93,7 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
       };
       void loadMorePosts();
     }
-  }, [inView, state.isLoading, state.hasMore, state.page]);
+  }, [inView, state.isLoading, state.hasMore, state.page, fetcher]);
 
   return {
     posts: state.posts,

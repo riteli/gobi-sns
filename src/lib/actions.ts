@@ -344,22 +344,104 @@ export const deleteAvatar = async () => {
   revalidatePath(`/profile/${user.id}`);
 };
 
-export const searchPosts = async (query: string) => {
+/**
+ * 検索結果をページネーションで取得する
+ * @param query - 検索クエリ
+ * @param page - 取得するページ番号
+ * @param pageSize - 1ページあたりの投稿数
+ */
+export const searchPosts = async (query: string, page: number, pageSize: number) => {
   if (!query) {
     return [];
   }
 
   const { supabase } = await getAuthenticatedClient();
 
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
   const { data: posts, error } = await supabase
     .from('posts')
     .select('*, profiles(user_name, avatar_url), likes(count)')
     .ilike('content', `%${query}%`)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(from, to);
 
   if (error) {
     console.error(error);
     throw new Error('検索に失敗しました。');
+  }
+
+  return posts;
+};
+
+/**
+ * 特定のユーザーの投稿をページネーションで取得する
+ * @param userId - ユーザーID
+ * @param page - 取得するページ番号
+ * @param pageSize - 1ページあたりの投稿数
+ */
+export const fetchUserPosts = async (userId: string, page: number, pageSize: number) => {
+  const { supabase } = await getAuthenticatedClient();
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name, avatar_url), likes(count)')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error('投稿の取得に失敗しました。');
+  }
+
+  return data;
+};
+
+/**
+ * 特定のユーザーがいいねした投稿をページネーションで取得する
+ * @param userId - ユーザーID
+ * @param page - 取得するページ番号
+ * @param pageSize - 1ページあたりの投稿数
+ */
+export const fetchUserLikedPosts = async (userId: string, page: number, pageSize: number) => {
+  const { supabase } = await getAuthenticatedClient();
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  // ユーザーがいいねした投稿のIDをページネーションで取得
+  const { data: likedPostObjects, error: likesError } = await supabase
+    .from('likes')
+    .select('post_id')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (likesError) {
+    throw new Error('いいねした投稿の取得に失敗しました。');
+  }
+
+  const likedPostIds = likedPostObjects
+    .map((likedPost) => likedPost.post_id)
+    .filter((id) => id !== null);
+
+  if (likedPostIds.length === 0) {
+    return [];
+  }
+
+  // 取得したIDリストに合致する投稿データを取得
+  const { data: posts, error: postsError } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name, avatar_url), likes(count)')
+    .in('id', likedPostIds)
+    .order('created_at', { ascending: false });
+
+  if (postsError) {
+    throw new Error('投稿データの取得に失敗しました。');
   }
 
   return posts;
