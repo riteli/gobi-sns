@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import Button from '@/components/ui/Button/Button';
-import { useLoginForm } from '@/hooks/useLoginForm';
+import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 
 import styles from '../authForm.module.scss';
 

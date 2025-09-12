@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
-import { deleteAccount } from '@/lib/actions';
+import { deleteAccount } from '@/features/auth/actions';
 import { deleteAccountSchema } from '@/lib/schema';
 
 type DeleteAccountFormData = z.infer<typeof deleteAccountSchema>;

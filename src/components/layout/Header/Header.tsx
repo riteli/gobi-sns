@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SearchBar } from '@/components/features/search/SearchBar/SearchBar';
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
-import { logout } from '@/lib/actions';
+import { logout } from '@/features/auth/actions';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import styles from './Header.module.scss';

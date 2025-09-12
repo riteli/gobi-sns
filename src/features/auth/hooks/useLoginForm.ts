@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
-import { login } from '@/lib/actions';
+import { login } from '@/features/auth/actions';
 import { loginSchema } from '@/lib/schema';
 
 type LoginFormData = z.infer<typeof loginSchema>;

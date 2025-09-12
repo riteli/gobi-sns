@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button/Button';
-import { useDeleteAccountForm } from '@/hooks/useDeleteAccountForm';
+import { useDeleteAccountForm } from '@/features/auth/hooks/useDeleteAccountForm';
 
 import styles from './DeleteAccountForm.module.scss';
 
