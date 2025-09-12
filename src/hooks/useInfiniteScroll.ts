@@ -14,6 +14,7 @@ type State = {
 };
 
 type Action =
+  | { type: 'SET_POSTS'; payload: PostWithProfile[] }
   | { type: 'ADD_POSTS'; payload: PostWithProfile[] }
   | { type: 'SET_IS_LOADING'; payload: boolean }
   | { type: 'SET_HAS_MORE'; payload: boolean }
@@ -21,6 +22,8 @@ type Action =
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
+    case 'SET_POSTS':
+      return { ...state, posts: action.payload };
     case 'ADD_POSTS':
       return { ...state, posts: [...state.posts, ...action.payload] };
     case 'SET_IS_LOADING':
@@ -48,6 +51,12 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    if (initialPosts) {
+      dispatch({ type: 'SET_POSTS', payload: initialPosts });
+    }
+  }, [initialPosts]);
 
   const { ref, inView } = useInView({
     threshold: 0,

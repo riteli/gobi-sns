@@ -139,7 +139,6 @@ export const createPost = async (formData: FormData) => {
 
   // キャッシュを更新してホームページにリダイレクト
   revalidatePath('/');
-  redirect('/');
 };
 
 /**
