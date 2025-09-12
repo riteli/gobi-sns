@@ -43,11 +43,13 @@ const reducer = (state: State, action: Action): State => {
  * @returns 投稿リスト、ローディング状態、および監視対象に設定するref
  */
 export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
+  const PAGE_SIZE = 10;
+
   const initialState: State = {
     posts: initialPosts ?? [],
     page: 1,
     isLoading: false,
-    hasMore: true,
+    hasMore: (initialPosts?.length ?? 0) === PAGE_SIZE,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -61,8 +63,6 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null) => {
   const { ref, inView } = useInView({
     threshold: 0,
   });
-
-  const PAGE_SIZE = 10;
 
   useEffect(() => {
     if (inView && !state.isLoading && state.hasMore) {

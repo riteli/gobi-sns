@@ -15,13 +15,16 @@ const HomePage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const PAGE_SIZE = 10;
+
   // 投稿データとContextの値を並行して取得
   const [{ data: posts }, timelineContextValue] = await Promise.all([
     supabase
       .from('posts')
       .select('*, profiles(user_name, avatar_url), likes(count)')
-      .order('created_at', { ascending: false }),
-    getTimelineContextValue(supabase, user), // 👈 共通関数を呼び出す
+      .order('created_at', { ascending: false })
+      .range(0, PAGE_SIZE - 1),
+    getTimelineContextValue(supabase, user),
   ]);
 
   return (
