@@ -1,6 +1,9 @@
-import { Timeline } from '@/components/features/timeline/Timeline';
+import PostForm from '@/components/features/posts/PostForm/PostForm';
+import { InfiniteScrollTimeline } from '@/components/features/timeline/InfiniteScrollTimeline';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';
+
+import styles from './page.module.scss';
 
 /**
  * メインページ（ホーム・タイムライン）
@@ -21,6 +24,14 @@ const HomePage = async () => {
     getTimelineContextValue(supabase, user), // 👈 共通関数を呼び出す
   ]);
 
-  return <Timeline posts={posts} timelineContextValue={timelineContextValue} />;
+  return (
+    <>
+      <header className={styles.header}>
+        <h2 className={styles.title}>タイムライン</h2>
+        <PostForm />
+      </header>
+      <InfiniteScrollTimeline initialPosts={posts} timelineContextValue={timelineContextValue} />
+    </>
+  );
 };
 export default HomePage;

@@ -391,3 +391,27 @@ export const deleteAccount = async (password: string) => {
 
   await logout();
 };
+
+/**
+ * 投稿をページネーションで取得する
+ * @param page - 取得するページ番号 (0から始まる)
+ * @param pageSize - 1ページあたりの投稿数
+ */
+export const fetchPosts = async (page: number, pageSize: number) => {
+  const { supabase } = await getAuthenticatedClient();
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name, avatar_url), likes(count)')
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error('投稿の取得に失敗しました。');
+  }
+
+  return data;
+};
