@@ -1,3 +1,6 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
@@ -12,6 +15,7 @@ type likeButtonProps = {
 };
 
 export const LikeButton = ({ post }: likeButtonProps) => {
+  const router = useRouter();
   const { likedPostIds } = useTimeline();
 
   // いいねの数
@@ -26,6 +30,7 @@ export const LikeButton = ({ post }: likeButtonProps) => {
       } else {
         await likePost(post.id);
       }
+      router.refresh();
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);

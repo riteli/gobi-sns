@@ -15,6 +15,7 @@ type State = {
 type Action =
   | { type: 'SET_POSTS'; payload: PostWithProfile[] }
   | { type: 'ADD_POSTS'; payload: PostWithProfile[] }
+  | { type: 'MERGE_UPDATED_POSTS'; payload: PostWithProfile[] }
   | { type: 'SET_IS_LOADING'; payload: boolean }
   | { type: 'SET_HAS_MORE'; payload: boolean }
   | { type: 'INCREMENT_PAGE' };
@@ -25,6 +26,11 @@ const reducer = (state: State, action: Action): State => {
       return { ...state, posts: action.payload };
     case 'ADD_POSTS':
       return { ...state, posts: [...state.posts, ...action.payload] };
+    case 'MERGE_UPDATED_POSTS': {
+      const updatedPostsMap = new Map(action.payload.map((p) => [p.id, p]));
+      const mergedPosts = state.posts.map((oldPost) => updatedPostsMap.get(oldPost.id) ?? oldPost);
+      return { ...state, posts: mergedPosts };
+    }
     case 'SET_IS_LOADING':
       return { ...state, isLoading: action.payload };
     case 'SET_HAS_MORE':
@@ -64,9 +70,16 @@ export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null, fetche
 
   useEffect(() => {
     if (initialPosts) {
-      dispatch({ type: 'SET_POSTS', payload: initialPosts });
+      if (
+        state.posts.length === 0 ||
+        (initialPosts[0] && state.posts[0].id !== initialPosts[0].id)
+      ) {
+        dispatch({ type: 'SET_POSTS', payload: initialPosts });
+      } else {
+        dispatch({ type: 'MERGE_UPDATED_POSTS', payload: initialPosts });
+      }
     }
-  }, [initialPosts]);
+  }, [initialPosts, state.posts]);
 
   const { ref, inView } = useInView({
     threshold: 0,

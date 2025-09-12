@@ -1,3 +1,6 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 import Button from '@/components/ui/Button/Button';
@@ -9,6 +12,8 @@ type FollowButtonProps = {
 };
 
 export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
+  const router = useRouter();
+
   const { followingUserIds } = useTimeline();
 
   // 現在の投稿の投稿者が、ログインユーザーのフォローリストに含まれているかを判定
@@ -22,6 +27,7 @@ export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
       } else {
         await followUser(targetUserId);
       }
+      router.refresh();
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);

@@ -21,7 +21,7 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   } = await supabase.auth.getUser();
 
   const PAGE_SIZE = 10;
-  const query = searchParams.q
+  const query = searchParams.q;
 
   // 検索結果とContextの値を並行して取得
   const [searchResultPosts, timelineContextValue] = await Promise.all([
@@ -31,9 +31,13 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
   return (
     <>
-      <h2 className={styles.title}>「{searchParams.q}」の検索結果</h2>
+      <h2 className={styles.title}>「{query}」の検索結果</h2>
       {/* 実際の描画はクライアントコンポーネントに委任 */}
-      <SearchResultClient query={query} initialPosts={searchResultPosts} timelineContextValue={timelineContextValue} />
+      <SearchResultClient
+        query={query}
+        initialPosts={searchResultPosts}
+        timelineContextValue={timelineContextValue}
+      />
     </>
   );
 };
