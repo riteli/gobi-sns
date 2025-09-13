@@ -1,3 +1,5 @@
+'use server';
+
 import { getAuthenticatedClient } from '@/lib/actions';
 
 /**

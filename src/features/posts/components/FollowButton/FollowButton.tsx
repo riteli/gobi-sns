@@ -2,7 +2,7 @@ import toast from 'react-hot-toast';
 
 import Button from '@/components/ui/Button/Button';
 import { useTimeline } from '@/contexts/TimelineContext';
-import { followUser, unfollowUser } from '@/lib/actions';
+import { followUser, unfollowUser } from '@/features/follow/actions';
 
 type FollowButtonProps = {
   targetUserId: string | null;
