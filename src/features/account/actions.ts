@@ -3,8 +3,8 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { getAuthenticatedClient } from '@/lib/actions';
 import { avatarSchema, profileSchema } from '@/lib/schema';
+import { getAuthenticatedClient } from '@/lib/utils';
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -107,4 +107,3 @@ export const deleteAvatar = async () => {
   revalidatePath('/account/profile');
   revalidatePath(`/profile/${user.id}`);
 };
-

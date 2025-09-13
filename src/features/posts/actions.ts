@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { getAuthenticatedClient } from '@/lib/actions';
 import { createPostSchema } from '@/lib/schema';
+import { getAuthenticatedClient } from '@/lib/utils';
 
 /**
  * 新規投稿作成

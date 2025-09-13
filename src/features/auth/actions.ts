@@ -3,9 +3,9 @@
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
-import { getAuthenticatedClient } from '@/lib/actions';
 import { signupSchema, loginSchema } from '@/lib/schema';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { getAuthenticatedClient } from '@/lib/utils';
 
 type LoginFormData = z.infer<typeof loginSchema>;
 type SignupFormData = z.infer<typeof signupSchema>;

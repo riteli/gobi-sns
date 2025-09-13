@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { getAuthenticatedClient } from '@/lib/actions';
+import { getAuthenticatedClient } from '@/lib/utils';
 
 /**
  * フォロー機能

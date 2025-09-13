@@ -1,6 +1,6 @@
 'use server';
 
-import { getAuthenticatedClient } from '@/lib/actions';
+import { getAuthenticatedClient } from '@/lib/utils';
 
 /**
  * 投稿をキーワードで検索する
