@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button/Button';
-import { useProfileForm } from '@/hooks/useProfileForm';
+import { useProfileForm } from '@/features/account/hooks/useProfileForm';
 import { type Profile } from '@/types';
 
 import styles from './ProfileForm.module.scss';

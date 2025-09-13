@@ -1,4 +1,4 @@
-import { ProfileClient } from '@/components/features/profile/ProfileClient/ProfileClient';
+import { ProfileClient } from '@/features/profile/components/ProfileClient/ProfileClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 /**

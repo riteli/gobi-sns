@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
-import PostList from '@/features/posts/components/PostList/PostList';
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineContext';
+import PostList from '@/features/posts/components/PostList/PostList';
 import { PostWithProfile } from '@/types';
 
 import styles from './ProfileClient.module.scss';

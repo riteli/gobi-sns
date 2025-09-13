@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState, useTransition } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { deleteAvatar, uploadAvatar } from '@/lib/actions';
+import { deleteAvatar, uploadAvatar } from '../actions';
 
 /**
  * アバターフォームに関するすべてのロジックをカプセル化したカスタムフック

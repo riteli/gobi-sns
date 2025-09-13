@@ -3,8 +3,9 @@
 import { useEffect, useReducer } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-import { fetchPosts } from '@/lib/actions';
 import { PostWithProfile } from '@/types';
+
+import { fetchPosts } from '../actions';
 
 type State = {
   posts: PostWithProfile[];

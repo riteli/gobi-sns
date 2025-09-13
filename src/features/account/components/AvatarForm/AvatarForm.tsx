@@ -2,7 +2,7 @@
 
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
-import { useAvatarForm } from '@/hooks/useAvatarForm';
+import { useAvatarForm } from '@/features/account/hooks/useAvatarForm';
 
 import styles from './AvatarForm.module.scss';
 

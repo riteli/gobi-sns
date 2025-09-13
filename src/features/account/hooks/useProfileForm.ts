@@ -3,9 +3,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
-import { updateProfile } from '@/lib/actions';
 import { profileSchema } from '@/lib/schema';
 import { type Profile } from '@/types';
+
+import { updateProfile } from '../actions';
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 

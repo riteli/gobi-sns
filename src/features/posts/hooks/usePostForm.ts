@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 
-import { useProfileData } from '@/hooks/useProfileData';
+import { useProfileData } from '@/features/profile/hooks/useProfileData';
 import { createPostSchema } from '@/lib/schema';
 
 import { createPost } from '../actions';
