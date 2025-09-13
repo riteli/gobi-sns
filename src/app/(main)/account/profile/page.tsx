@@ -1,6 +1,6 @@
-import { AvatarForm } from '@/components/features/account/AvatarForm/AvatarForm';
-import { DeleteAccountForm } from '@/components/features/account/DeleteAccountForm/DeleteAccountForm';
-import { ProfileForm } from '@/components/features/account/ProfileForm/ProfileForm';
+import { AvatarForm } from '@/features/account/components/AvatarForm/AvatarForm';
+import { DeleteAccountForm } from '@/features/account/components/DeleteAccountForm/DeleteAccountForm';
+import { ProfileForm } from '@/features/account/components/ProfileForm/ProfileForm';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import styles from './page.module.scss';
