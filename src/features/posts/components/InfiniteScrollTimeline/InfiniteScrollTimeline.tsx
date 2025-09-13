@@ -4,7 +4,7 @@ import { TimelineContext, type TimelineContextType } from '@/contexts/TimelineCo
 import { useInfiniteScroll } from '@/features/posts/hooks/useInfiniteScroll';
 import { type PostWithProfile } from '@/types';
 
-import PostList from '../../../features/posts/components/PostList/PostList';
+import PostList from '../PostList/PostList';
 
 type InfiniteScrollTimelineProps = {
   initialPosts: PostWithProfile[] | null;
