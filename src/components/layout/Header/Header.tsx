@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
-import { SearchBar } from '@/components/features/search/SearchBar/SearchBar';
 import { Avatar } from '@/components/ui/Avatar/Avatar';
 import Button from '@/components/ui/Button/Button';
 import { logout } from '@/features/auth/actions';
+import { SearchBar } from '@/features/search/components/SearchBar/SearchBar';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 import styles from './Header.module.scss';

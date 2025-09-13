@@ -1,5 +1,5 @@
-import { SearchResultClient } from '@/components/features/search/SearchResultClient/SearchResultClient';
-import { searchPosts } from '@/features/account/actions';
+import { searchPosts } from '@/features/search/actions';
+import { SearchResultClient } from '@/features/search/components/SearchResultClient/SearchResultClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';
 
