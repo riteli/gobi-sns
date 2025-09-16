@@ -39,16 +39,6 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
       .filter((id): id is string => id !== null),
   );
 
-  // ページ表示用: プロフィール対象ユーザーがいいねした投稿ID一覧を取得
-  const { data: likedPostObjects } = await supabase
-    .from('likes')
-    .select('post_id')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  const profileUserLikedPostIds =
-    likedPostObjects?.map((likedPost) => likedPost.post_id).filter((id) => id !== null) ?? [];
-
   // ページに必要なデータを並行取得
   const [
     profileResult,
@@ -70,9 +60,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
       .eq('user_id', userId)
       .order('created_at', { ascending: false }),
     supabase
-      .from('posts')
-      .select('*, profiles(user_name, avatar_url), likes(count)')
-      .in('id', profileUserLikedPostIds)
+      .from('likes')
+      .select('posts(*, profiles(user_name, avatar_url), likes(count))')
+      .eq('user_id', userId)
       .order('created_at', { ascending: false }),
   ]);
 
@@ -80,7 +70,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   const followingCount = followingCountResult.count ?? 0;
   const followerCount = followerCountResult.count ?? 0;
   const usersPosts = usersPostsResult.data;
-  const likedPosts = likedPostsResult.data;
+  const likedPosts =
+    likedPostsResult.data?.map((like) => like.posts).filter((post) => post !== null) ?? [];
 
   const timelineContextValue = {
     userId: loggedInUser?.id ?? null,
