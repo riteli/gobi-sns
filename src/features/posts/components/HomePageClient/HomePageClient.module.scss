@@ -1,0 +1,49 @@
+@use 'styles/variables' as *;
+
+// ヘッダーエリア
+.header {
+  margin-bottom: 2rem;
+}
+
+// ページタイトル
+.title {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+// タブボタンのコンテナ
+.tabs {
+  display: flex;
+  border-bottom: 1px solid $color-gray-medium;
+}
+
+// 個別のタブボタン
+.tab {
+  margin-bottom: -1px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: $color-gray-dark;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+
+  &:hover {
+    color: darken($color-gray-dark, 20%);
+  }
+}
+
+// アクティブなタブボタンのスタイル
+.tabActive {
+  color: $color-primary;
+  border-bottom-color: $color-primary;
+}
+
+// 投稿一覧が表示されるコンテンツエリア
+.content {
+  margin-top: 1.5rem;
+}

@@ -1,13 +1,11 @@
-import { InfiniteScrollTimeline } from '@/features/posts/components/InfiniteScrollTimeline/InfiniteScrollTimeline';
-import PostForm from '@/features/posts/components/PostForm/PostForm';
+import { fetchFollowingPosts, fetchPosts } from '@/features/posts/actions';
+import { HomePageClient } from '@/features/posts/components/HomePageClient/HomePageClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';
 
-import styles from './page.module.scss';
-
 /**
  * メインページ（ホーム・タイムライン）
- * 投稿フォームと投稿一覧を表示
+ * 全ユーザーの投稿とフォロー中のユーザーの投稿を取得し、クライアントコンポーネントに渡す
  */
 const HomePage = async () => {
   const supabase = await createSupabaseServerClient();
@@ -18,23 +16,18 @@ const HomePage = async () => {
   const PAGE_SIZE = 10;
 
   // 投稿データとContextの値を並行して取得
-  const [{ data: posts }, timelineContextValue] = await Promise.all([
-    supabase
-      .from('posts')
-      .select('*, profiles(user_name, avatar_url), likes(count)')
-      .order('created_at', { ascending: false })
-      .range(0, PAGE_SIZE - 1),
+  const [followingPosts, allPosts, timelineContextValue] = await Promise.all([
+    fetchFollowingPosts(0, PAGE_SIZE),
+    fetchPosts(0, PAGE_SIZE),
     getTimelineContextValue(supabase, user),
   ]);
 
   return (
-    <>
-      <header className={styles.header}>
-        <h2 className={styles.title}>タイムライン</h2>
-        <PostForm />
-      </header>
-      <InfiniteScrollTimeline initialPosts={posts} timelineContextValue={timelineContextValue} />
-    </>
+    <HomePageClient
+      followingPosts={followingPosts}
+      allPosts={allPosts}
+      timelineContextValue={timelineContextValue}
+    />
   );
 };
 export default HomePage;
