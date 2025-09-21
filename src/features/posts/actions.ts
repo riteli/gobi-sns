@@ -134,3 +134,43 @@ export const fetchPosts = async (page: number, pageSize: number) => {
 
   return data;
 };
+
+/**
+ * フォローしたユーザーの投稿をページネーションで取得する
+ * @param page - 取得するページ番号 (0から始まる)
+ * @param pageSize - 1ページあたりの投稿数
+ */
+export const fetchFollowingPosts = async (page: number, pageSize: number) => {
+  const { supabase, user } = await getAuthenticatedClient();
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data: follows, error: followsError } = await supabase
+    .from('follows')
+    .select('following_id')
+    .eq('follower_id', user.id);
+
+  if (followsError) {
+    throw new Error('フォローユーザーの取得に失敗しました。');
+  }
+
+  const followingList = follows.map((id) => id.following_id).filter((id) => id !== null);
+
+  if (!followingList.length) {
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*, profiles(user_name, avatar_url), likes(count)')
+    .in('user_id', followingList)
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error('投稿の取得に失敗しました。');
+  }
+
+  return data;
+};
