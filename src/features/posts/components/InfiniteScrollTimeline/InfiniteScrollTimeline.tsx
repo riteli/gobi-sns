@@ -6,9 +6,12 @@ import { type PostWithProfile } from '@/types';
 
 import PostList from '../PostList/PostList';
 
+type Fetcher = (page: number, pageSize: number) => Promise<PostWithProfile[]>;
+
 type InfiniteScrollTimelineProps = {
   initialPosts: PostWithProfile[] | null;
   timelineContextValue: TimelineContextType;
+  fetcher: Fetcher;
 };
 
 /**
@@ -17,8 +20,9 @@ type InfiniteScrollTimelineProps = {
 export const InfiniteScrollTimeline = ({
   initialPosts,
   timelineContextValue,
+  fetcher,
 }: InfiniteScrollTimelineProps) => {
-  const { posts, isLoading, ref } = useInfiniteScroll(initialPosts);
+  const { posts, isLoading, ref } = useInfiniteScroll(initialPosts, fetcher);
 
   return (
     <TimelineContext.Provider value={timelineContextValue}>
