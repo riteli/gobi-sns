@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 
@@ -8,6 +8,7 @@ import PostForm from '@/features/posts/components/PostForm/PostForm';
 import { PostWithProfile } from '@/types';
 
 import styles from './HomePageClient.module.scss';
+import { fetchFollowingPosts, fetchPosts } from '../../actions';
 
 type HomePageClientProps = {
   followingPosts: PostWithProfile[] | null;
@@ -68,12 +69,14 @@ export const HomePageClient = (props: HomePageClientProps) => {
             <InfiniteScrollTimeline
               initialPosts={followingPosts}
               timelineContextValue={timelineContextValue}
+              fetcher={fetchFollowingPosts}
             />
           )}
           {activeTab === 'allPosts' && (
             <InfiniteScrollTimeline
               initialPosts={allPosts}
               timelineContextValue={timelineContextValue}
+              fetcher={fetchPosts}
             />
           )}
         </div>
