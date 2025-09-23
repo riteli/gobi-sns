@@ -156,6 +156,7 @@ export const fetchFollowingPosts = async (page: number, pageSize: number) => {
   }
 
   const followingList = follows.map((id) => id.following_id).filter((id) => id !== null);
+  followingList.push(user.id);
 
   if (!followingList.length) {
     return [];
