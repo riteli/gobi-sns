@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import Button from '@/components/ui/Button/Button';
-import { useSignUpForm } from '@/hooks/useSignUpForm';
+import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm';
 
 import styles from '../authForm.module.scss';
 

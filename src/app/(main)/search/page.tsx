@@ -1,5 +1,5 @@
-import { SearchResultClient } from '@/components/features/search/SearchResultClient/SearchResultClient';
-import { searchPosts } from '@/lib/actions';
+import { searchPosts } from '@/features/search/actions';
+import { SearchResultClient } from '@/features/search/components/SearchResultClient/SearchResultClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';
 
@@ -20,24 +20,17 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const PAGE_SIZE = 10;
-  const query = searchParams.q;
-
   // 検索結果とContextの値を並行して取得
   const [searchResultPosts, timelineContextValue] = await Promise.all([
-    searchPosts(query, 0, PAGE_SIZE),
+    searchPosts(searchParams.q),
     getTimelineContextValue(supabase, user),
   ]);
 
   return (
     <>
-      <h2 className={styles.title}>「{query}」の検索結果</h2>
+      <h2 className={styles.title}>「{searchParams.q}」の検索結果</h2>
       {/* 実際の描画はクライアントコンポーネントに委任 */}
-      <SearchResultClient
-        query={query}
-        initialPosts={searchResultPosts}
-        timelineContextValue={timelineContextValue}
-      />
+      <SearchResultClient posts={searchResultPosts} timelineContextValue={timelineContextValue} />
     </>
   );
 };

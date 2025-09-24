@@ -1,13 +1,16 @@
-import { ProfileClient } from '@/components/features/profile/ProfileClient/ProfileClient';
-import { fetchUserLikedPosts, fetchUserPosts } from '@/lib/actions';
+import { ProfileClient } from '@/features/profile/components/ProfileClient/ProfileClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { getTimelineContextValue } from '@/lib/utils';
+
+type ProfilePageProps = {
+  params: { userId: string };
+};
 
 /**
  * プロフィールページ（サーバーコンポーネント）
  * ページの表示に必要なデータをすべて取得し、クライアントコンポーネントに渡す
  */
-const ProfilePage = async ({ params }: { params: { userId: string } }) => {
+const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { userId } = params;
   const supabase = await createSupabaseServerClient();
 
@@ -17,7 +20,16 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
 
   const PAGE_SIZE = 10;
 
-  const timelineContextValue = await getTimelineContextValue(supabase, loggedInUser);
+  const loggedInUserLikedPostIds = new Set(
+    (loggedInUserLikesResult.data ?? [])
+      .map((like) => like.post_id)
+      .filter((id): id is number => id !== null),
+  );
+  const loggedInUserFollowingIds = new Set(
+    (loggedInUserFollowsResult.data ?? [])
+      .map((follow) => follow.following_id)
+      .filter((id): id is string => id !== null),
+  );
 
   // ページに必要なデータを並行取得
   const [
@@ -34,13 +46,30 @@ const ProfilePage = async ({ params }: { params: { userId: string } }) => {
       .single(),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId),
     supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', userId),
-    fetchUserPosts(userId, 0, PAGE_SIZE),
-    fetchUserLikedPosts(userId, 0, PAGE_SIZE),
+    supabase
+      .from('posts')
+      .select('*, profiles(user_name, avatar_url), likes(count)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('likes')
+      .select('posts(*, profiles(user_name, avatar_url), likes(count))')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false }),
   ]);
 
   const profile = profileResult.data;
   const followingCount = followingCountResult.count ?? 0;
   const followerCount = followerCountResult.count ?? 0;
+  const usersPosts = usersPostsResult.data;
+  const likedPosts =
+    likedPostsResult.data?.map((like) => like.posts).filter((post) => post !== null) ?? [];
+
+  const timelineContextValue = {
+    userId: loggedInUser?.id ?? null,
+    likedPostIds: loggedInUserLikedPostIds,
+    followingUserIds: loggedInUserFollowingIds,
+  };
 
   if (!profile) {
     return <div>ユーザーが見つかりません</div>;
