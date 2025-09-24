@@ -6,7 +6,7 @@ import { getTimelineContextValue } from '@/lib/utils';
 import styles from './page.module.scss';
 
 type SearchPageProps = {
-  searchParams: { q: string };
+  searchParams: Promise<{ q: string }>;
 };
 
 /**
@@ -15,6 +15,7 @@ type SearchPageProps = {
  * データ取得とContextの値の作成に専念し、描画はクライアントコンポーネントに委任する
  */
 const SearchPage = async ({ searchParams }: SearchPageProps) => {
+  const { q } = await searchParams;
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -22,13 +23,13 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
   // 検索結果とContextの値を並行して取得
   const [searchResultPosts, timelineContextValue] = await Promise.all([
-    searchPosts(searchParams.q),
+    searchPosts(q),
     getTimelineContextValue(supabase, user),
   ]);
 
   return (
     <>
-      <h2 className={styles.title}>「{searchParams.q}」の検索結果</h2>
+      <h2 className={styles.title}>「{q}」の検索結果</h2>
       {/* 実際の描画はクライアントコンポーネントに委任 */}
       <SearchResultClient posts={searchResultPosts} timelineContextValue={timelineContextValue} />
     </>
