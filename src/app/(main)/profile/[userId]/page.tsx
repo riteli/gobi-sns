@@ -1,11 +1,17 @@
 import { ProfileClient } from '@/features/profile/components/ProfileClient/ProfileClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
+type Props = {
+  params: { userId: string };
+  searchParams: Record<string, string | string[] | undefined>;
+};
+
 /**
  * プロフィールページ（サーバーコンポーネント）
  * ページの表示に必要なデータをすべて取得し、クライアントコンポーネントに渡す
  */
-const ProfilePage = async ({ params }: { params: { userId: string } }) => {
+const ProfilePage = async ({ params }: Props) => {
+  // 型として Props を使用
   const { userId } = params;
   const supabase = await createSupabaseServerClient();
 
