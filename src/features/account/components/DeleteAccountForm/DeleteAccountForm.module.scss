@@ -1,8 +1,9 @@
+@use 'sass:color';
 @use 'styles/variables' as *;
 
 // フォーム全体のコンテナ
 .form {
-  background-color: lighten($color-error, 40%);
+  background-color: color.adjust($color-error, $lightness: 40%);
   border: 1px solid $color-error;
   border-radius: 8px;
   padding: 2rem;
@@ -67,7 +68,7 @@
 
 // チェックボックス
 .checkbox {
- transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 // エラーメッセージ

@@ -1,8 +1,9 @@
+@use 'sass:color';
 @use 'styles/variables' as *;
 
 // プロフィール未完了時の案内表示
 .notice {
-  background-color: lighten($color-error, 35%);
+  background-color: color.adjust($color-error, $lightness: 35%);
   border: 1px solid $color-error;
   border-radius: 8px;
   padding: 1rem;
@@ -34,7 +35,7 @@
   border-radius: 4px;
   text-align: left;
   color: $color-error;
-  background-color: lighten($color-error, 35%);
+  background-color: color.adjust($color-error, $lightness: 35%);
 }
 
 // 投稿内容入力用のテキストエリア
