@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'styles/variables' as *;
 
 // プロフィールページ全体のコンテナ
@@ -94,7 +95,7 @@
     border-color 0.2s;
 
   &:hover {
-    color: darken($color-gray-dark, 20%);
+    color: color.adjust($color-gray-dark, $lightness: -20%);
   }
 }
 

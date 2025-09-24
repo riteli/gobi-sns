@@ -1,6 +1,5 @@
 import { ProfileClient } from '@/features/profile/components/ProfileClient/ProfileClient';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { getTimelineContextValue } from '@/lib/utils';
 
 type ProfilePageProps = {
   params: { userId: string };
@@ -18,7 +17,16 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     data: { user: loggedInUser },
   } = await supabase.auth.getUser();
 
-  const PAGE_SIZE = 10;
+  // Context用: ログインユーザー自身のいいね・フォロー情報を取得
+  const [loggedInUserLikesResult, loggedInUserFollowsResult] = loggedInUser
+    ? await Promise.all([
+        supabase.from('likes').select('post_id').eq('user_id', loggedInUser.id),
+        supabase.from('follows').select('following_id').eq('follower_id', loggedInUser.id),
+      ])
+    : [
+        { data: [], error: null },
+        { data: [], error: null },
+      ];
 
   const loggedInUserLikedPostIds = new Set(
     (loggedInUserLikesResult.data ?? [])
@@ -36,8 +44,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
     profileResult,
     followingCountResult,
     followerCountResult,
-    initialUserPosts,
-    initialLikedPosts,
+    usersPostsResult,
+    likedPostsResult,
   ] = await Promise.all([
     supabase
       .from('profiles')
@@ -77,14 +85,13 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
   return (
     <ProfileClient
-      userId={userId}
       userName={profile.user_name}
       currentGobi={profile.current_gobi}
       avatarUrl={profile.avatar_url}
       followingCount={followingCount}
       followerCount={followerCount}
-      initialUserPosts={initialUserPosts}
-      initialLikedPosts={initialLikedPosts}
+      userPosts={usersPosts}
+      likedPosts={likedPosts}
       timelineContextValue={timelineContextValue}
     />
   );
