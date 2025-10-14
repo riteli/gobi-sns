@@ -1,18 +1,18 @@
 import Link from 'next/link';
 
-import { Avatar } from '@/components/ui/Avatar/Avatar';
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
+import { UserAvatar } from '@/components/ui/UserAvatar/UserAvatar';
 import { logout } from '@/features/auth/actions';
 import { SearchBar } from '@/features/search/components/SearchBar/SearchBar';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
-import styles from './Header.module.scss';
+import styles from './GlobalHeader.module.scss';
 
 /**
  * アプリケーション全体のヘッダーコンポーネント
  * 認証状態に応じてナビゲーションを表示
  */
-const Header = async () => {
+const GlobalHeader = async () => {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -32,18 +32,18 @@ const Header = async () => {
       {/* ログイン済みユーザー向けナビゲーション */}
       {user && (
         <nav className={styles.nav}>
-          <Button href="/account/profile" variant="accent">
+          <AppButton href="/account/profile" variant="accent">
             プロフィール設定
-          </Button>
+          </AppButton>
 
           <form action={logout}>
-            <Button type="submit" variant="secondary">
+            <AppButton type="submit" variant="secondary">
               ログアウト
-            </Button>
+            </AppButton>
           </form>
 
           <Link href={`/profile/${user.id}`} className={styles.avatarLink}>
-            <Avatar avatarUrl={profile?.avatar_url ?? null} size={40} />
+            <UserAvatar avatarUrl={profile?.avatar_url ?? null} size={40} />
           </Link>
 
           <SearchBar />
@@ -53,4 +53,4 @@ const Header = async () => {
   );
 };
 
-export default Header;
+export default GlobalHeader;

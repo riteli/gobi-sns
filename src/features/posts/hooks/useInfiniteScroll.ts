@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 
 import { PostWithProfile } from '@/types';
 
-type Fetcher = (page: number, pageSize: number) => Promise<PostWithProfile[]>;
+type Fetcher = (page: number, pageSize: number) => Promise<Array<PostWithProfile>>;
 
 /**
  * 投稿の無限スクロール機能を提供するカスタムフック
@@ -13,7 +13,10 @@ type Fetcher = (page: number, pageSize: number) => Promise<PostWithProfile[]>;
  *  @param fetcher - 追加の投稿を読み込むための非同期関数
  * @returns 投稿リスト、ローディング状態、および監視対象に設定するref
  */
-export const useInfiniteScroll = (initialPosts: PostWithProfile[] | null, fetcher: Fetcher) => {
+export const useInfiniteScroll = (
+  initialPosts: Array<PostWithProfile> | null,
+  fetcher: Fetcher,
+) => {
   const PAGE_SIZE = 10;
 
   const [posts, setPosts] = useState(() => initialPosts ?? []);

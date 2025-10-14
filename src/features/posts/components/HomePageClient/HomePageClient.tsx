@@ -11,8 +11,8 @@ import styles from './HomePageClient.module.scss';
 import { fetchFollowingPosts, fetchPosts } from '../../actions';
 
 type HomePageClientProps = {
-  followingPosts: PostWithProfile[] | null;
-  allPosts: PostWithProfile[] | null;
+  followingPosts: Array<PostWithProfile> | null;
+  allPosts: Array<PostWithProfile> | null;
   timelineContextValue: TimelineContextType;
 };
 

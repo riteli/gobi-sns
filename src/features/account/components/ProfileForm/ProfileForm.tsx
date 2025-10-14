@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { useProfileForm } from '@/features/account/hooks/useProfileForm';
 import { type Profile } from '@/types';
 
@@ -38,9 +38,9 @@ export const ProfileForm = ({ profile }: ProfileFormProps) => {
         {errors.gobi && <p className={styles.errorMessage}>{errors.gobi.message}</p>}
       </div>
 
-      <Button type="submit" variant="primary" disabled={isSubmitting}>
+      <AppButton type="submit" variant="primary" disabled={isSubmitting}>
         {isSubmitting ? '更新中...' : '更新する'}
-      </Button>
+      </AppButton>
     </form>
   );
 };

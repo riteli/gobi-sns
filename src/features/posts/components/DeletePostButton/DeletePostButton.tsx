@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
 import { deletePost } from '@/features/posts/actions';
 
@@ -25,7 +25,7 @@ export const DeletePostButton = ({ postId }: DeletePostButtonProps) => {
 
   return (
     <>
-      <Button
+      <AppButton
         type="button"
         variant="secondary"
         size="small"
@@ -34,7 +34,7 @@ export const DeletePostButton = ({ postId }: DeletePostButtonProps) => {
         }}
       >
         削除
-      </Button>
+      </AppButton>
 
       <ConfirmModal
         isOpen={isModalOpen}

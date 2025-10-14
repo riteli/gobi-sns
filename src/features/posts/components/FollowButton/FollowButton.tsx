@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { useTimeline } from '@/contexts/TimelineContext';
 import { followUser, unfollowUser } from '@/features/follow/actions';
 
@@ -39,13 +39,13 @@ export const FollowButton = ({ targetUserId }: FollowButtonProps) => {
   };
 
   return (
-    <Button
+    <AppButton
       type="button"
       variant={isFollowing ? 'primary' : 'secondary'}
       size="small"
       onClick={handleFollow}
     >
       {isFollowing ? 'フォロー中' : 'フォローする'}
-    </Button>
+    </AppButton>
   );
 };

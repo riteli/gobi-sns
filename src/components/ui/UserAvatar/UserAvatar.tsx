@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import { FaUserCircle } from 'react-icons/fa';
 
-import styles from './Avatar.module.scss';
+import styles from './UserAvatar.module.scss';
 
-type AvatarProps = {
+type UserAvatarProps = {
   avatarUrl: string | null;
   size: number;
 };
 
-export const Avatar = ({ avatarUrl, size }: AvatarProps) => {
+export const UserAvatar = ({ avatarUrl, size }: UserAvatarProps) => {
   return (
     <div className={styles.avatarWrapper} style={{ width: size, height: size }}>
       {avatarUrl ? (

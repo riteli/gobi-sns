@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 
-import { Avatar } from '@/components/ui/Avatar/Avatar';
 import { ClientFormattedTime } from '@/components/ui/ClientFormattedTime/ClientFormattedTime';
+import { UserAvatar } from '@/components/ui/UserAvatar/UserAvatar';
 import { useTimeline } from '@/contexts/TimelineContext';
 import { type PostWithProfile } from '@/types';
 
@@ -32,7 +32,7 @@ const PostCard = ({ post }: PostCardProps) => {
       <article className={styles.card}>
         <header className={styles.header}>
           <Link href={`/profile/${post.user_id}`} className={styles.userNameLink}>
-            <Avatar avatarUrl={post.profiles?.avatar_url ?? null} size={48} />
+            <UserAvatar avatarUrl={post.profiles?.avatar_url ?? null} size={48} />
             <span className={styles.userName}>{post.profiles?.user_name ?? '名無しさん'}</span>
           </Link>
           {/* 投稿者本人以外のみフォローボタンを表示 */}

@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { useDeleteAccountForm } from '@/features/auth/hooks/useDeleteAccountForm';
 
 import styles from './DeleteAccountForm.module.scss';
@@ -50,9 +50,9 @@ export const DeleteAccountForm = () => {
         {errors.confirm && <p className={styles.errorMessage}>{errors.confirm.message}</p>}
       </div>
       <div className={styles.buttonContainer}>
-        <Button type="submit" variant="danger" disabled={isSubmitting}>
+        <AppButton type="submit" variant="danger" disabled={isSubmitting}>
           {isSubmitting ? '削除中...' : 'アカウントを削除する'}
-        </Button>
+        </AppButton>
       </div>
     </form>
   );

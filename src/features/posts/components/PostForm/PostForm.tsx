@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { usePostForm } from '@/features/posts/hooks/usePostForm';
 
 import styles from './PostForm.module.scss';
@@ -29,7 +29,7 @@ const PostForm = () => {
   // 折りたたみ時は展開ボタンのみ表示
   if (!isExpanded) {
     return (
-      <Button
+      <AppButton
         type="button"
         variant="accent"
         onClick={() => {
@@ -37,7 +37,7 @@ const PostForm = () => {
         }}
       >
         投稿フォームを表示する
-      </Button>
+      </AppButton>
     );
   }
 
@@ -46,9 +46,9 @@ const PostForm = () => {
     return (
       <div className={styles.notice}>
         <p>投稿するには、プロフィール設定でユーザー名とカスタム語尾を設定する必要があります。</p>
-        <Button href="/account/profile" variant="primary">
+        <AppButton href="/account/profile" variant="primary">
           設定ページへ
-        </Button>
+        </AppButton>
       </div>
     );
   }
@@ -71,7 +71,7 @@ const PostForm = () => {
       </div>
 
       <div className={styles.actions}>
-        <Button
+        <AppButton
           type="button"
           variant="secondary"
           onClick={() => {
@@ -79,10 +79,10 @@ const PostForm = () => {
           }}
         >
           投稿フォームを閉じる
-        </Button>
-        <Button type="submit" variant="primary" disabled={isSubmitting}>
+        </AppButton>
+        <AppButton type="submit" variant="primary" disabled={isSubmitting}>
           {isSubmitting ? '投稿中...' : '投稿する'}
-        </Button>
+        </AppButton>
       </div>
     </form>
   );
