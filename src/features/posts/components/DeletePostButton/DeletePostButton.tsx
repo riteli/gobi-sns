@@ -1,3 +1,6 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import Button from '@/components/ui/Button/Button';
@@ -9,6 +12,7 @@ type DeletePostButtonProps = {
 };
 
 export const DeletePostButton = ({ postId }: DeletePostButtonProps) => {
+  const router = useRouter();
   // モーダルの開閉状態の判定
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,6 +20,7 @@ export const DeletePostButton = ({ postId }: DeletePostButtonProps) => {
   const handleDeleteConfirm = async () => {
     await deletePost(postId);
     setIsModalOpen(false);
+    router.refresh();
   };
 
   return (
