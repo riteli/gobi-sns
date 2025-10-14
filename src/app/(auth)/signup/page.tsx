@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm';
 
 import styles from '../authForm.module.scss';
@@ -71,9 +71,9 @@ const SignUpPage = () => {
             )}
           </div>
 
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
+          <AppButton type="submit" variant="primary" disabled={isSubmitting}>
             {isSubmitting ? '登録中...' : '登録する'}
-          </Button>
+          </AppButton>
         </fieldset>
       </form>
 

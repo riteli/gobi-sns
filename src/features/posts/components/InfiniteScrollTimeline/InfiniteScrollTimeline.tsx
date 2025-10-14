@@ -6,10 +6,10 @@ import { type PostWithProfile } from '@/types';
 
 import PostList from '../PostList/PostList';
 
-type Fetcher = (page: number, pageSize: number) => Promise<PostWithProfile[]>;
+type Fetcher = (page: number, pageSize: number) => Promise<Array<PostWithProfile>>;
 
 type InfiniteScrollTimelineProps = {
-  initialPosts: PostWithProfile[] | null;
+  initialPosts: Array<PostWithProfile> | null;
   timelineContextValue: TimelineContextType;
   fetcher: Fetcher;
 };

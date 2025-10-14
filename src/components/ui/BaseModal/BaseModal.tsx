@@ -2,9 +2,9 @@
 
 import { type FC, type ReactNode, useEffect, useRef } from 'react';
 
-import styles from './Modal.module.scss';
+import styles from './BaseModal.module.scss';
 
-type ModalProps = {
+type BaseModalProps = {
   children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
@@ -14,7 +14,7 @@ type ModalProps = {
  * HTMLの<dialog>要素をラップした、汎用的なモーダルコンポーネント。
  * 親から渡される`isOpen`の状態に応じて、`.showModal()`と`.close()`を副作用として実行する。
  */
-const Modal: FC<ModalProps> = ({ children, isOpen, onClose }) => {
+const BaseModal: FC<BaseModalProps> = ({ children, isOpen, onClose }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -35,4 +35,4 @@ const Modal: FC<ModalProps> = ({ children, isOpen, onClose }) => {
   );
 };
 
-export default Modal;
+export default BaseModal;

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
 import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 
 import styles from '../authForm.module.scss';
@@ -54,9 +54,9 @@ const LoginPage = () => {
             {errors.password && <p className={styles.errorMessage}>{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
+          <AppButton type="submit" variant="primary" disabled={isSubmitting}>
             {isSubmitting ? 'ログイン中...' : 'ログイン'}
-          </Button>
+          </AppButton>
         </fieldset>
       </form>
 

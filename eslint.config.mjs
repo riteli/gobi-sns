@@ -20,7 +20,7 @@ export default tseslint.config(
     files: ['*.ts', '*.tsx'], // 読み込むファイル
   },
   {
-    ignores: ['**/.next/**/*', 'src/types/database.types.ts'], // 無視するファイル
+    ignores: ['**/.next/**/*', 'src/types/database.types.ts', 'prettier.config.mjs'], // 無視するファイル
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
@@ -39,6 +39,7 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/array-type': ['error', { default: 'generic' }],
     },
   },
   {

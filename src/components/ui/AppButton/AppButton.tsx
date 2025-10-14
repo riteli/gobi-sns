@@ -1,35 +1,35 @@
 import Link from 'next/link';
 import { type ComponentPropsWithoutRef, type FC, type ReactNode } from 'react';
 
-import styles from './Button.module.scss';
+import styles from './AppButton.module.scss';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'accent';
 type ButtonSize = 'medium' | 'small';
 
 /** ボタンとリンクで共通する、見た目に関する基本的なProps */
-type BaseProps = {
+type AppBaseProps = {
   children: ReactNode;
   variant?: ButtonVariant;
   size?: ButtonSize;
 };
 
 /** <button>として扱われる場合のPropsの設計図 */
-type ButtonAsButton = BaseProps &
+type AppButtonAsButton = AppBaseProps &
   ComponentPropsWithoutRef<'button'> & {
     href?: never;
   };
 
 /** <Link>として扱われる場合のPropsの設計図 */
-type ButtonAsLink = BaseProps &
+type AppButtonAsLink = AppBaseProps &
   Omit<ComponentPropsWithoutRef<typeof Link>, 'type'> & {
     href: string;
   };
 
 /** 上記2つのどちらかの型に一致することを表現するUnion型 */
-type ButtonProps = ButtonAsButton | ButtonAsLink;
+type AppButtonProps = AppButtonAsButton | AppButtonAsLink;
 
 /** ButtonPropsがどちらの型かを判別する型ガード関数 */
-function isLink(props: ButtonProps): props is ButtonAsLink {
+function isLink(props: AppButtonProps): props is AppButtonAsLink {
   return 'href' in props;
 }
 
@@ -38,7 +38,7 @@ function isLink(props: ButtonProps): props is ButtonAsLink {
  * hrefプロパティの有無で<button>と<Link>を切り替える
  * primary/secondaryのバリアント、medium/smallのサイズをサポート
  */
-const Button: FC<ButtonProps> = (props) => {
+const AppButton: FC<AppButtonProps> = (props) => {
   const classNames = `${styles.button} ${styles[props.variant ?? 'primary']} ${styles[props.size ?? 'medium']}`;
 
   if (isLink(props)) {
@@ -58,4 +58,4 @@ const Button: FC<ButtonProps> = (props) => {
   );
 };
 
-export default Button;
+export default AppButton;

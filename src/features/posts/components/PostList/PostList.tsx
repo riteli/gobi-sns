@@ -4,7 +4,7 @@ import { type PostWithProfile } from '@/types';
 import styles from './PostList.module.scss';
 
 type PostListProps = {
-  posts: PostWithProfile[] | null;
+  posts: Array<PostWithProfile> | null;
 };
 
 /**

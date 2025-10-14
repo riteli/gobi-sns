@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar } from '@/components/ui/Avatar/Avatar';
-import Button from '@/components/ui/Button/Button';
+import AppButton from '@/components/ui/AppButton/AppButton';
+import { UserAvatar } from '@/components/ui/UserAvatar/UserAvatar';
 import { useAvatarForm } from '@/features/account/hooks/useAvatarForm';
 
 import styles from './AvatarForm.module.scss';
@@ -36,7 +36,7 @@ export const AvatarForm = ({ avatarUrl }: AvatarFormProps) => {
       }}
       className={styles.container}
     >
-      <Avatar avatarUrl={currentAvatarSrc} size={128} />
+      <UserAvatar avatarUrl={currentAvatarSrc} size={128} />
 
       {/* 見た目上は隠されているファイル選択input */}
       <input
@@ -51,27 +51,27 @@ export const AvatarForm = ({ avatarUrl }: AvatarFormProps) => {
       <div className={styles.actions}>
         {preview ? (
           <>
-            <Button type="button" variant="secondary" onClick={handleReset} disabled={isPending}>
+            <AppButton type="button" variant="secondary" onClick={handleReset} disabled={isPending}>
               キャンセル
-            </Button>
-            <Button type="button" variant="primary" onClick={handleUpload} disabled={isPending}>
+            </AppButton>
+            <AppButton type="button" variant="primary" onClick={handleUpload} disabled={isPending}>
               {isPending ? 'アップロード中' : 'この画像に決定'}
-            </Button>
+            </AppButton>
           </>
         ) : (
           <>
-            <Button
+            <AppButton
               type="button"
               variant="secondary"
               onClick={handleChangeClick}
               disabled={isPending}
             >
               画像を変更
-            </Button>
+            </AppButton>
             {avatarUrl && (
-              <Button type="button" variant="danger" onClick={handleDelete} disabled={isPending}>
+              <AppButton type="button" variant="danger" onClick={handleDelete} disabled={isPending}>
                 {isPending ? '削除中...' : '画像を削除'}
-              </Button>
+              </AppButton>
             )}
           </>
         )}

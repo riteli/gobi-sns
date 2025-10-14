@@ -5,7 +5,7 @@ import PostList from '@/features/posts/components/PostList/PostList';
 import { type PostWithProfile } from '@/types';
 
 type SearchResultClientProps = {
-  posts: PostWithProfile[] | null;
+  posts: Array<PostWithProfile> | null;
   timelineContextValue: TimelineContextType;
 };
 
