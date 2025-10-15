@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import AppButton from '@/components/ui/AppButton/AppButton';
 import ConfirmModal from '@/components/ui/ConfirmModal/ConfirmModal';
@@ -18,9 +19,18 @@ export const DeletePostButton = ({ postId }: DeletePostButtonProps) => {
 
   // 投稿の削除処理
   const handleDeleteConfirm = async () => {
-    await deletePost(postId);
-    setIsModalOpen(false);
-    router.refresh();
+    try {
+      await deletePost(postId);
+      setIsModalOpen(false);
+      router.refresh();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.error(error);
+        toast.error('エラーが発生しました。時間をおいて再度お試しください。');
+      }
+    }
   };
 
   return (
