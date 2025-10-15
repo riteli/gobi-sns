@@ -20,16 +20,13 @@ export async function middleware(request: NextRequest) {
   // 未認証でもアクセス可能なルート
   const publicRoutes = ['/login', '/signup'];
 
-  // 未認証ユーザーの処理
-  if (!user) {
-    if (!publicRoutes.includes(pathname)) {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
-  } else {
-    // 認証済みユーザーが認証ページにアクセスした場合はホームへリダイレクト
-    if (publicRoutes.includes(pathname)) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+  // 未承認ユーザーが保護されたページにアクセスした場合はログインページへリダイレクト
+  if (!user && !publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  // 認証済みユーザーが認証ページにアクセスした場合はホームへリダイレクト
+  if (user && publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return response;
