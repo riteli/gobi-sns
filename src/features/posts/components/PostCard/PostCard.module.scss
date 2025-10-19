@@ -43,6 +43,13 @@
   line-height: 1.7;
 }
 
+// フッター
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 // アクション部分のコンテナ
 .actions {
   margin-top: 0.75rem;

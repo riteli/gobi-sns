@@ -23,7 +23,7 @@
 // 注意書き
 .notice {
   padding-left: 1.5rem;
-  color: crimson;
+  color: $color-error;
 }
 
 // 各フォーム項目のグループ
@@ -74,7 +74,6 @@
 // エラーメッセージ
 .errorMessage {
   color: $color-error;
-  margin-top: 0.25rem;
 }
 
 // 削除ボタンのコンテナ
