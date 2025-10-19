@@ -43,7 +43,7 @@ const PostCard = ({ post }: PostCardProps) => {
           <p className={styles.content}>{post.content}</p>
         </main>
 
-        <footer>
+        <footer className={styles.footer}>
           <div className={styles.actions}>
             <LikeButton post={post} />
             {/* 投稿者本人のみ削除ボタンを表示 */}

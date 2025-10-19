@@ -16,6 +16,9 @@
 
 // 投稿フォームのメインコンテナ
 .form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   background-color: $color-white;
   padding: 1rem;
   border-radius: 8px;
@@ -24,8 +27,6 @@
 
 // メッセージ表示エリアのラッパー
 .messageWrapper {
-  margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
   width: 100%;
 }
 
@@ -62,5 +63,4 @@
   justify-content: flex-end; // ボタンを右寄せ
   align-items: center;
   gap: 0.75rem; // ボタン間の余白
-  margin-top: 0.75rem;
 }
