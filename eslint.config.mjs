@@ -1,3 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -15,79 +18,68 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-export default tseslint.config(
-  {
-    files: ['*.ts', '*.tsx'], // 読み込むファイル
+export default tseslint.config({
+  files: ['*.ts', '*.tsx'], // 読み込むファイル
+}, {
+  ignores: ['**/.next/**/*', 'src/types/database.types.ts', 'prettier.config.mjs'], // 無視するファイル
+}, eslint.configs.recommended, tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked, ...compat.extends('next/core-web-vitals'), {
+  // @typescript-eslintに関する設定
+  languageOptions: {
+    parser: tseslint.parser,
+    parserOptions: {
+      project: true,
+      tsconfigRootDir: __dirname,
+    },
   },
-  {
-    ignores: ['**/.next/**/*', 'src/types/database.types.ts', 'prettier.config.mjs'], // 無視するファイル
+  rules: {
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
+    '@typescript-eslint/array-type': ['error', { default: 'generic' }],
   },
-  eslint.configs.recommended,
-  tseslint.configs.strictTypeChecked,
-  tseslint.configs.stylisticTypeChecked,
-  ...compat.extends('next/core-web-vitals'),
-  {
-    // @typescript-eslintに関する設定
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: __dirname,
+}, {
+  // eslint-plugin-importに関する設定
+  plugins: {
+    import: importPlugin,
+  },
+  rules: {
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal'],
+        alphabetize: { order: 'asc', caseInsensitive: true },
+        'newlines-between': 'always', // import groups 1行空ける
+        pathGroups: [
+          { pattern: 'src/components/**', group: 'internal', position: 'before' },
+          { pattern: 'src/lib/**', group: 'internal', position: 'before' },
+        ],
       },
-    },
-    rules: {
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
-      '@typescript-eslint/array-type': ['error', { default: 'generic' }],
+    ],
+    'import/newline-after-import': 'error',
+    'import/no-duplicates': 'error',
+  },
+}, {
+  // eslint-plugin-unused-importsに関する設定
+  plugins: {
+    'unused-imports': unusedImports,
+  },
+  rules: {
+    'unused-imports/no-unused-imports': 'error',
+  },
+}, {
+  // その他設定
+  files: ['src/**/*.{js,jsx,ts,tsx}'],
+  linterOptions: {
+    reportUnusedDisableDirectives: 'error',
+  },
+  languageOptions: {
+    globals: {
+      React: 'readonly',
     },
   },
-  {
-    // eslint-plugin-importに関する設定
-    plugins: {
-      import: importPlugin,
-    },
-    rules: {
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', 'internal'],
-          alphabetize: { order: 'asc', caseInsensitive: true },
-          'newlines-between': 'always', // import groups 1行空ける
-          pathGroups: [
-            { pattern: 'src/components/**', group: 'internal', position: 'before' },
-            { pattern: 'src/lib/**', group: 'internal', position: 'before' },
-          ],
-        },
-      ],
-      'import/newline-after-import': 'error',
-      'import/no-duplicates': 'error',
-    },
+  rules: {
+    'react/jsx-boolean-value': 'error', // JSXの中でのbooleanの使用
+    'react/jsx-curly-brace-presence': 'error', // JSXの中での余分な{}の使用
   },
-  {
-    // eslint-plugin-unused-importsに関する設定
-    plugins: {
-      'unused-imports': unusedImports,
-    },
-    rules: {
-      'unused-imports/no-unused-imports': 'error',
-    },
-  },
-  {
-    // その他設定
-    files: ['src/**/*.{js,jsx,ts,tsx}'],
-    linterOptions: {
-      reportUnusedDisableDirectives: 'error',
-    },
-    languageOptions: {
-      globals: {
-        React: 'readonly',
-      },
-    },
-    rules: {
-      'react/jsx-boolean-value': 'error', // JSXの中でのbooleanの使用
-      'react/jsx-curly-brace-presence': 'error', // JSXの中での余分な{}の使用
-    },
-  },
-  eslintConfigPrettier, // Prettierとの競合防止
-);
+}, // Prettierとの競合防止
+eslintConfigPrettier, storybook.configs["flat/recommended"]);
