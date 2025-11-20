@@ -7,3 +7,7 @@ export type PostWithProfile = Post & {
   profiles: Pick<Profile, 'user_name' | 'avatar_url'> | null;
   likes: Array<{ count: number }>;
 };
+
+export type CreatePostRequest = {
+  content: string;
+};
